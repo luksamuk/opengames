@@ -1,3 +1,9 @@
+/*
+*  Reversi em C/OpenGL
+*  por Lucas Samuel Vieira
+*  Itabira - 2013
+*/
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
