@@ -17,3 +17,7 @@ Clone de Reversi feito em C e OpenGL.
 Status atual:
 - Inserir regras do jogo;
 - Inserir sistema de contagem de pontos e sa√≠da.
+
+CPlatformer
+-----------
+Platformer r·pido feito em C, SDL e OpenGL.
