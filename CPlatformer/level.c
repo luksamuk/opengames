@@ -1,3 +1,12 @@
+/* CPlatformer - Platformer feito em C,
+ * SDL e OpenGL.
+ *
+ * level.c
+ *
+ * Criado por Lucas Vieira
+ * Unifei - Campus Itabira, 2013.
+ */
+
 #include "level.h"
 
 bool loadlevel(char* filename, level* lvl)
