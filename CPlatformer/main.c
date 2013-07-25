@@ -9,11 +9,13 @@
 
 #include "stdafx.h"
 #include "level.h"
+#include "character.h"
 
 // Variáveis globais
 bool running;
 Uint32 gameloop_count;
 level lvl;
+character chr;
 int currentsection;
 
 // Protótipos de funções globais
@@ -71,6 +73,9 @@ void init()
 	// Carregue a fase
 	loadlevel("leveldef.lvl", &lvl);
 	currentsection = lvl.init_section;
+	// Carregue o personagem
+	loadcharacter("brbr.character", &chr);
+	initcharacter(&chr);
 }
 
 void update()
@@ -115,6 +120,8 @@ void draw()
 
 	// Desenhe a seção atual
 	rendersection(&lvl, currentsection);
+	// Desenhe o personagem
+	rendercharf(&chr);
 }
 
 // Funções globais de input

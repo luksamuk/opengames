@@ -50,7 +50,7 @@ bool loadcharacter(char* filename, character* chr)
 		chr->frames[i].hotspotX = intbuf;
 		fscanf(file, "%d", &intbuf);
 		chr->frames[i].hotspotY = intbuf;
-		chr->frames[i].colorfrompallete = malloc(sizeof(int) * arraysize)
+		chr->frames[i].colorfrompallete = malloc(sizeof(int) * arraysize);
 		for(j = 0; j < arraysize; j++)
 		{
 			fscanf(file, "%d", &intbuf);
@@ -67,7 +67,7 @@ void initcharacter(character* chr)
 	chr->dir = DIRECTION_RIGHT;
 	// Inicializa a posição inicial
 	// TODO
-	chr->xpos = chr->ypos = WIN_WIDTH / 2.0f;
+	chr->x = chr->y = WIN_WIDTH / 2.0f;
 }
 
 void unloadcharacter(character* chr)
@@ -83,6 +83,38 @@ void unloadcharacter(character* chr)
 
 void rendercharf(character* chr)
 {
+	int currentcolor, i;
+	GLfloat r, g, b;
+	currentcolor = -1;
 	// Renderizar personagem na tela.
-	// TODO
+	// TODO: Levar direção em consideração.
+	glBegin(GL_POINTS);
+		for(i = 0; i < (chr->width * chr->height); i++)
+		{
+			int getcolor = chr->frames[chr->currentframe].colorfrompallete[i];
+			// Se não houver cor, não renderize.
+			if(getcolor > -1)
+			{
+				// Se for uma cor diferente da utilizada anteriorimente,
+				// troque o estado de máquina.
+				if(currentcolor != getcolor)
+				{
+					currentcolor = getcolor;
+					r = chr->p.colors[currentcolor].r;
+					g = chr->p.colors[currentcolor].g;
+					b = chr->p.colors[currentcolor].b;
+					glColor3f(r, g, b);
+				}
+				// Calcule a posição correta do pixel
+				int factor = i / chr->width;
+				float pointXpos = (i - ((float)chr->width * factor)) -
+					(chr->width - chr->frames[chr->currentframe].hotspotX);
+				float pointYpos = factor - (chr->height - chr->frames[chr->currentframe].hotspotY);
+				pointXpos += chr->x;
+				pointYpos += chr->y;
+				// Desenhe.
+				glVertex2f(pointXpos, pointYpos);
+			}
+		}	
+	glEnd();
 }

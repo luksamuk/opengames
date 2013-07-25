@@ -29,6 +29,7 @@ typedef struct character
 {
 	pallete p;
 	int n_frames;
+	int currentframe;
 	int width, height;
 	chardirection dir;
 	animframe* frames;
