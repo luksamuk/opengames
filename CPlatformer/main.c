@@ -1,30 +1,20 @@
 /* CPlatformer - Platformer feito em C,
  * SDL e OpenGL.
  *
+ * main.c
+ *
  * Criado por Lucas Vieira
  * Unifei - Campus Itabira, 2013.
  */
 
-// Bibliotecas
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <SDL/SDL.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-
-// Definições
-#define WIN_WIDTH  640
-#define WIN_HEIGHT 480
-#define FRAMERATE 30.0
-
-// Definições de tipos
-typedef SDLKey KeyboardKey;
-typedef Uint8  MouseButton;
+#include "stdafx.h"
+#include "level.h"
 
 // Variáveis globais
 bool running;
 Uint32 gameloop_count;
+level lvl;
+int currentsection;
 
 // Protótipos de funções globais
 void init();
@@ -77,6 +67,10 @@ void init()
 
 	// Defina a cor de tela vazia
 	glClearColor(0, 0, 0, 1);
+
+	// Carregue a fase
+	loadlevel("leveldef.lvl", &lvl);
+	currentsection = lvl.init_section;
 }
 
 void update()
@@ -118,6 +112,9 @@ void draw()
 	glClear(GL_COLOR_BUFFER_BIT);
 	// Resete a matrix de posição
 	glLoadIdentity();
+
+	// Desenhe a seção atual
+	rendersection(&lvl, currentsection);
 }
 
 // Funções globais de input
@@ -128,6 +125,16 @@ void handleKeyboard(KeyboardKey key, bool isPressed)
 	case SDLK_ESCAPE:
 		// Se apertar ESC, saia.
 		running = false;
+		break;
+	case SDLK_LEFT:
+		// Vá para a seção da esquerda
+		if(currentsection > 0)
+			currentsection--;
+		break;
+	case SDLK_RIGHT:
+		// Vá para a seção da direita
+		if(currentsection < lvl.n_sections - 1)
+			currentsection++;
 		break;
 	}
 }
