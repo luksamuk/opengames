@@ -12,6 +12,7 @@
 
 #include "stdafx.h"
 #include "pallete.h"
+#include "level.h"
 
 typedef struct animframe
 {
@@ -38,7 +39,7 @@ typedef struct character
 } character;
 
 bool loadcharacter(char*, character*);
-void initcharacter(character*);
+void initcharacter(character*, level*);
 void unloadcharacter(character*);
 void rendercharf(character*);
 

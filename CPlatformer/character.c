@@ -61,13 +61,16 @@ bool loadcharacter(char* filename, character* chr)
 	return true;
 }
 
-void initcharacter(character* chr)
+void initcharacter(character* chr, level* lvl)
 {
 	// Inicializa direção
 	chr->dir = DIRECTION_RIGHT;
 	// Inicializa a posição inicial
-	// TODO
-	chr->x = chr->y = WIN_WIDTH / 2.0f;
+	chr->x = ((lvl->init_pos_x + 1) * TILESIZE_PX) - (TILESIZE_PX / 2);
+	chr->y = ((lvl->init_pos_y + 1) * TILESIZE_PX) - (TILESIZE_PX / 2);
+
+	chr->x -= chr->frames[0].hotspotX;
+	chr->y -= chr->frames[0].hotspotY;
 }
 
 void unloadcharacter(character* chr)

@@ -14,10 +14,10 @@ bool loadlevel(char* filename, level* lvl)
 	FILE *file;
 	file = fopen(filename, "r");
 	if(!file) return false;
-	
+
 	int intbuf, i, j;
 	float floatbuf;
-	
+
 	// Número de cores na paleta
 	fscanf(file, "%d", &intbuf);
 	lvl->p.n_colors = intbuf;
@@ -60,7 +60,12 @@ bool loadlevel(char* filename, level* lvl)
 	// Seção inicial
 	fscanf(file, "%d", &intbuf);
 	lvl->init_section = intbuf;
-	
+	// Tile inicial em que o personagem deverá PISAR
+	fscanf(file, "%d", &intbuf);
+	lvl->init_pos_x = intbuf;
+	fscanf(file, "%d", &intbuf);
+	lvl->init_pos_y = intbuf;
+
 	fclose(file);
 	return true;
 }
@@ -98,6 +103,6 @@ void rendersection(level* lvl, int currentsection)
 			glVertex2f(xpos + TILESIZE_PX, ypos);
 			glVertex2f(xpos + TILESIZE_PX, ypos + TILESIZE_PX);
 			glVertex2f(xpos, ypos + TILESIZE_PX);
-		glEnd();		
+		glEnd();
 	}
 }

@@ -33,6 +33,7 @@ typedef struct level
 	tile*    tiles;
 	section* sections;
 	pallete  p;
+	int init_pos_x, init_pos_y;
 } level;
 
 bool loadlevel(char*, level*);

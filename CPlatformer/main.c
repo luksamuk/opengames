@@ -74,8 +74,8 @@ void init()
 	loadlevel("leveldef.lvl", &lvl);
 	currentsection = lvl.init_section;
 	// Carregue o personagem
-	loadcharacter("brbr.character", &chr);
-	initcharacter(&chr);
+	loadcharacter("brbr.chr", &chr);
+	initcharacter(&chr, &lvl);
 }
 
 void update()
@@ -135,12 +135,12 @@ void handleKeyboard(KeyboardKey key, bool isPressed)
 		break;
 	case SDLK_LEFT:
 		// Vá para a seção da esquerda
-		if(currentsection > 0)
+		if(isPressed && currentsection > 0)
 			currentsection--;
 		break;
 	case SDLK_RIGHT:
 		// Vá para a seção da direita
-		if(currentsection < lvl.n_sections - 1)
+		if(isPressed && currentsection < lvl.n_sections - 1)
 			currentsection++;
 		break;
 	}
