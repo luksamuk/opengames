@@ -107,14 +107,14 @@ void rendercharf(character* chr)
 				}
 				// Calcule a posição correta do pixel
 				int factor = i / chr->width;
-				float pointXpos = (i - ((float)chr->width * factor)) -
-					(chr->width - chr->frames[chr->currentframe].hotspotX);
-				float pointYpos = factor - (chr->height - chr->frames[chr->currentframe].hotspotY);
+				float pointXpos = i - (factor * chr->width)
+                    - (chr->frames[chr->currentframe].hotspotX / 2);
+				float pointYpos = factor - (chr->frames[chr->currentframe].hotspotY / 2);
 				pointXpos += chr->x;
 				pointYpos += chr->y;
 				// Desenhe.
 				glVertex2f(pointXpos, pointYpos);
 			}
-		}	
+		}
 	glEnd();
 }
