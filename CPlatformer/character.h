@@ -33,13 +33,17 @@ typedef struct character
 	int currentframe;
 	int width, height;
 	chardirection dir;
+	chardirection* movToDir;
 	animframe* frames;
+	byte moveCountdown, currmov;
 
 	float x, y;
 } character;
 
 bool loadcharacter(char*, character*);
 void initcharacter(character*, level*);
+void updatecharacter(character*);
+bool movchartodir(character*, chardirection);
 void unloadcharacter(character*);
 void rendercharf(character*);
 

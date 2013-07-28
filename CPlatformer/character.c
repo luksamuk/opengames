@@ -71,6 +71,58 @@ void initcharacter(character* chr, level* lvl)
 
 	chr->x -= chr->frames[0].hotspotX;
 	chr->y -= chr->frames[0].hotspotY;
+
+	// A direção inicial a se mover o personagem deve ser NENHUMA.
+	chr->movToDir      =  NULL;
+	chr->moveCountdown =     0;
+	chr->currmov       =     0;
+}
+
+void updatecharacter(character* chr)
+{
+	if(chr->movToDir != NULL)
+	{
+		if(chr->dir != (*chr->movToDir))
+		{
+			chr->dir = (*chr->movToDir);
+			free(chr->movToDir);
+			chr->movToDir = NULL;
+			chr->moveCountdown = 8;
+		}
+		else if(chr->currmov == 0 && chr->moveCountdown == 0)
+		{
+			// Comparar se tiles da frente são sólidos
+			// TODO
+			chr->x += (TILESIZE_PX / 2)
+				* ((*chr->movToDir) == DIRECTION_LEFT ? -1 : 1);
+			chr->currmov = 1;
+			chr->moveCountdown = 8;
+		}
+		else if(chr->currmov == 1 && chr->moveCountdown == 0)
+		{
+			chr->x += (TILESIZE_PX / 2)
+				* ((*chr->movToDir) == DIRECTION_LEFT ? -1 : 1);
+			free(chr->movToDir);
+			chr->movToDir = NULL;
+			chr->currmov = 0;
+			chr->moveCountdown = 8;
+		}
+	}
+
+	if(chr->moveCountdown > 0)
+	chr->moveCountdown--;
+
+	if(chr->currmov == 0) chr->currentframe = 0;
+	else chr->currentframe = 1;
+}
+
+bool movchartodir(character* chr, chardirection dir)
+{
+	if(chr->movToDir != NULL)
+		return false;
+	chr->movToDir = malloc(sizeof(chardirection));
+	(*chr->movToDir) = dir;
+	return true;
 }
 
 void unloadcharacter(character* chr)
@@ -90,7 +142,6 @@ void rendercharf(character* chr)
 	GLfloat r, g, b;
 	currentcolor = -1;
 	// Renderizar personagem na tela.
-	// TODO: Levar direção em consideração.
 	glBegin(GL_POINTS);
 		for(i = 0; i < (chr->width * chr->height); i++)
 		{
@@ -110,8 +161,9 @@ void rendercharf(character* chr)
 				}
 				// Calcule a posição correta do pixel
 				int factor = i / chr->width;
-				float pointXpos = i - (factor * chr->width)
-                    - (chr->frames[chr->currentframe].hotspotX / 2);
+				float pointXpos = (i - (factor * chr->width)
+                    - (chr->frames[chr->currentframe].hotspotX / 2))
+                    * (chr->dir == DIRECTION_LEFT ? -1 : 1);
 				float pointYpos = factor - (chr->frames[chr->currentframe].hotspotY / 2);
 				pointXpos += chr->x;
 				pointYpos += chr->y;

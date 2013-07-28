@@ -24,7 +24,8 @@
 #define FRAMERATE 30.0
 
 // Definições de tipos
-typedef SDLKey KeyboardKey;
-typedef Uint8  MouseButton;
+typedef SDLKey        KeyboardKey;
+typedef Uint8         MouseButton;
+typedef unsigned char byte;
 
 #endif

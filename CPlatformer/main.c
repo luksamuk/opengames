@@ -29,7 +29,7 @@ void draw();
 int main(int argc, char** argv)
 {
 	// Inicia o SDL
-	SDL_Init(SDL_INIT_EVERYTHING);
+	SDL_Init(SDL_INIT_VIDEO);
 	// Troca o nome na janela
 	SDL_WM_SetCaption("CPlatformer", NULL);
 	// Define largura e altura da tela com um buffer de 32bit
@@ -80,6 +80,8 @@ void init()
 
 void update()
 {
+	updatecharacter(&chr);
+
 	SDL_Event event;
 
 	// Redistribui os eventos de saída e presionamentos
@@ -134,14 +136,14 @@ void handleKeyboard(KeyboardKey key, bool isPressed)
 		running = false;
 		break;
 	case SDLK_LEFT:
-		// Vá para a seção da esquerda
-		if(isPressed && currentsection > 0)
-			currentsection--;
+		// Mova o personagem para a esquerda
+		if(isPressed)
+			movchartodir(&chr, DIRECTION_LEFT);
 		break;
 	case SDLK_RIGHT:
-		// Vá para a seção da direita
-		if(isPressed && currentsection < lvl.n_sections - 1)
-			currentsection++;
+		// Mova o personagem para a direita
+		if(isPressed)
+			movchartodir(&chr, DIRECTION_RIGHT);
 		break;
 	}
 }
