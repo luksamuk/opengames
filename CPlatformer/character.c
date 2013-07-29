@@ -80,8 +80,13 @@ void initcharacter(character* chr, level* lvl)
 
 void updatecharacter(character* chr)
 {
-	if(chr->movToDir != NULL)
+	// Se houver uma direção registrada para o personagem
+	// se mover, faça;
+	if(chr->movToDir)
 	{
+		// Se o lugar para onde o personagem estiver olhando
+		// for diferente da direção pretendida, então apenas
+		// vire o personagem e conclua.
 		if(chr->dir != (*chr->movToDir))
 		{
 			chr->dir = (*chr->movToDir);
@@ -89,15 +94,18 @@ void updatecharacter(character* chr)
 			chr->movToDir = NULL;
 			chr->moveCountdown = 8;
 		}
+		// Se não, se o personagem está no lugar e o delay estiver
+		// em 0, faça o personagem fazer o primeiro movimento.
 		else if(chr->currmov == 0 && chr->moveCountdown == 0)
 		{
-			// Comparar se tiles da frente são sólidos
-			// TODO
+			// TODO: Comparar se tiles da frente são sólidos
 			chr->x += (TILESIZE_PX / 2)
 				* ((*chr->movToDir) == DIRECTION_LEFT ? -1 : 1);
 			chr->currmov = 1;
 			chr->moveCountdown = 8;
 		}
+		// Se o personagem já tiver feito o primeiro movimento,
+		// faça o segundo movimento, e conclua.
 		else if(chr->currmov == 1 && chr->moveCountdown == 0)
 		{
 			chr->x += (TILESIZE_PX / 2)
@@ -106,19 +114,24 @@ void updatecharacter(character* chr)
 			chr->movToDir = NULL;
 			chr->currmov = 0;
 			chr->moveCountdown = 8;
+			// TODO: Verificar se o personagem está em um dos
+			// cantos da seção atual; se sim, mova para a
+			// seção pretendida e reposicione o personagem.
 		}
 	}
 
+	// Contador regressivo
 	if(chr->moveCountdown > 0)
 	chr->moveCountdown--;
-
-	if(chr->currmov == 0) chr->currentframe = 0;
-	else chr->currentframe = 1;
+	// Define a animação atual
+	chr->currentframe = chr->currmov;
 }
 
 bool movchartodir(character* chr, chardirection dir)
 {
-	if(chr->movToDir != NULL)
+	// Caso não haja direções registradas para o personagem
+	// se mover, registre a nova direção no ponteiro.
+	if(chr->movToDir)
 		return false;
 	chr->movToDir = malloc(sizeof(chardirection));
 	(*chr->movToDir) = dir;

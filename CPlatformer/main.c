@@ -80,6 +80,7 @@ void init()
 
 void update()
 {
+	// Atualize o personagem
 	updatecharacter(&chr);
 
 	SDL_Event event;
