@@ -30,6 +30,7 @@ typedef struct level
 {
 	int      n_sections, init_section;
 	int      n_tiles;
+	int      currentsection;
 	tile*    tiles;
 	section* sections;
 	pallete  p;
@@ -38,6 +39,6 @@ typedef struct level
 
 bool loadlevel(char*, level*);
 void unloadlevel(level*);
-void rendersection(level*, int currentsection);
+void rendersection(level*);
 
 #endif

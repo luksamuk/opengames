@@ -16,7 +16,6 @@ bool running;
 Uint32 gameloop_count;
 level lvl;
 character chr;
-int currentsection;
 
 // Protótipos de funções globais
 void init();
@@ -72,7 +71,7 @@ void init()
 
 	// Carregue a fase
 	loadlevel("leveldef.lvl", &lvl);
-	currentsection = lvl.init_section;
+
 	// Carregue o personagem
 	loadcharacter("brbr.chr", &chr);
 	initcharacter(&chr, &lvl);
@@ -81,7 +80,7 @@ void init()
 void update()
 {
 	// Atualize o personagem
-	updatecharacter(&chr);
+	updatecharacter(&chr, &lvl);
 
 	SDL_Event event;
 
@@ -122,7 +121,7 @@ void draw()
 	glLoadIdentity();
 
 	// Desenhe a seção atual
-	rendersection(&lvl, currentsection);
+	rendersection(&lvl);
 	// Desenhe o personagem
 	rendercharf(&chr);
 }

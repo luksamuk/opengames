@@ -42,7 +42,8 @@ typedef struct character
 
 bool loadcharacter(char*, character*);
 void initcharacter(character*, level*);
-void updatecharacter(character*);
+bool isnexttilesolid(character*, level*);
+void updatecharacter(character*, level*);
 bool movchartodir(character*, chardirection);
 void unloadcharacter(character*);
 void rendercharf(character*);

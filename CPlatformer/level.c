@@ -67,6 +67,9 @@ bool loadlevel(char* filename, level* lvl)
 	lvl->init_pos_y = intbuf;
 
 	fclose(file);
+
+	lvl->currentsection = lvl->init_section;
+
 	return true;
 }
 
@@ -78,17 +81,17 @@ void unloadlevel(level* lvl)
 	free(lvl->sections);
 }
 
-void rendersection(level* lvl, int currentsection)
+void rendersection(level* lvl)
 {
 	// A seção deve ser válida.
-	if(currentsection < 0 || currentsection >= lvl->n_sections)
+	if(lvl->currentsection < 0 || lvl->currentsection >= lvl->n_sections)
 		return;
 	int i;
 
 	for(i = 0; i < (20 * 15); i++)
 	{
 		// Seleciona a cor a renderizar
-		int targetTile = lvl->sections[currentsection].tiles[i];
+		int targetTile = lvl->sections[lvl->currentsection].tiles[i];
 		int targetColor = lvl->tiles[targetTile].colorfrompallete;
 		glColor3f(lvl->p.colors[targetColor].r, lvl->p.colors[targetColor].g,
 				 lvl->p.colors[targetColor].b);

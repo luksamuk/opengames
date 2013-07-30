@@ -78,7 +78,31 @@ void initcharacter(character* chr, level* lvl)
 	chr->currmov       =     0;
 }
 
-void updatecharacter(character* chr)
+bool isnexttilesolid(character* chr, level* lvl)
+{
+	int nextTileX, nextTileY, finalTile, currTile;
+	nextTileX = (chr->x / TILESIZE_PX);
+	nextTileY = (chr->y + 11.0f) / TILESIZE_PX;
+
+	if(chr->dir == DIRECTION_LEFT)
+		nextTileX -= 2;
+	else nextTileX++;
+
+	// Para o tile ao nível do pé
+	finalTile = (nextTileY * 20) + nextTileX;
+	currTile = lvl->sections[lvl->currentsection].tiles[finalTile];
+	if(lvl->tiles[currTile].collidable)
+		return true;
+	nextTileY--;
+	// Para o tile ao nível da cabeça
+	finalTile = (nextTileY * 20) + nextTileX;
+	currTile = lvl->sections[lvl->currentsection].tiles[finalTile];
+	if(lvl->tiles[currTile].collidable)
+		return true;
+	return false;
+}
+
+void updatecharacter(character* chr, level* lvl)
 {
 	// Se houver uma direção registrada para o personagem
 	// se mover, faça;
@@ -98,11 +122,24 @@ void updatecharacter(character* chr)
 		// em 0, faça o personagem fazer o primeiro movimento.
 		else if(chr->currmov == 0 && chr->moveCountdown == 0)
 		{
-			// TODO: Comparar se tiles da frente são sólidos
-			chr->x += (TILESIZE_PX / 2)
-				* ((*chr->movToDir) == DIRECTION_LEFT ? -1 : 1);
-			chr->currmov = 1;
-			chr->moveCountdown = 8;
+			// Se houver algum tile sólido até 2 tiles de altura
+			// do personagem logo à frente do mesmo, não ande.
+			// O personagem deve estar também dentro de uma área
+			// em que não pode ocorrer transição de seções.
+			if(((chr->x / TILESIZE_PX) > 1 && (chr->x / TILESIZE_PX < 19))
+				&& isnexttilesolid(chr, lvl))
+			{
+				free(chr->movToDir);
+				chr->movToDir = NULL;
+			}
+			// Se não, continue a andar para a próxima direção.
+			else
+			{
+				chr->x += (TILESIZE_PX / 2)
+					* ((*chr->movToDir) == DIRECTION_LEFT ? -1 : 1);
+				chr->currmov = 1;
+				chr->moveCountdown = 8;
+			}
 		}
 		// Se o personagem já tiver feito o primeiro movimento,
 		// faça o segundo movimento, e conclua.
@@ -114,9 +151,19 @@ void updatecharacter(character* chr)
 			chr->movToDir = NULL;
 			chr->currmov = 0;
 			chr->moveCountdown = 8;
-			// TODO: Verificar se o personagem está em um dos
-			// cantos da seção atual; se sim, mova para a
-			// seção pretendida e reposicione o personagem.
+			
+			if(chr->x / TILESIZE_PX < 1)
+			{
+				lvl->currentsection--;
+				// Reposicionar personagem à direita
+				chr->x = 19 * TILESIZE_PX;
+			}
+			else if(chr->x / TILESIZE_PX > 19)
+			{
+				lvl->currentsection++;
+				// Reposicionar personagem à esquerda
+				chr->x = TILESIZE_PX;
+			}
 		}
 	}
 
