@@ -14,6 +14,8 @@
 #include "pallete.h"
 #include "level.h"
 
+#define CHAR_WALK_DELAY 5
+
 typedef struct animframe
 {
 	int hotspotX, hotspotY;

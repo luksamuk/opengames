@@ -81,9 +81,11 @@ void initcharacter(character* chr, level* lvl)
 bool isnexttilesolid(character* chr, level* lvl)
 {
 	int nextTileX, nextTileY, finalTile, currTile;
+
+	// Calcule, a partir da posição do personagem,
+	// o próximo tile na matriz do jogo.
 	nextTileX = (chr->x / TILESIZE_PX);
 	nextTileY = (chr->y + 11.0f) / TILESIZE_PX;
-
 	if(chr->dir == DIRECTION_LEFT)
 		nextTileX -= 2;
 	else nextTileX++;
@@ -111,12 +113,12 @@ void updatecharacter(character* chr, level* lvl)
 		// Se o lugar para onde o personagem estiver olhando
 		// for diferente da direção pretendida, então apenas
 		// vire o personagem e conclua.
-		if(chr->dir != (*chr->movToDir))
+		if(chr->dir != (*chr->movToDir) && chr->moveCountdown == 0)
 		{
 			chr->dir = (*chr->movToDir);
 			free(chr->movToDir);
 			chr->movToDir = NULL;
-			chr->moveCountdown = 8;
+			chr->moveCountdown = CHAR_WALK_DELAY;
 		}
 		// Se não, se o personagem está no lugar e o delay estiver
 		// em 0, faça o personagem fazer o primeiro movimento.
@@ -138,7 +140,7 @@ void updatecharacter(character* chr, level* lvl)
 				chr->x += (TILESIZE_PX / 2)
 					* ((*chr->movToDir) == DIRECTION_LEFT ? -1 : 1);
 				chr->currmov = 1;
-				chr->moveCountdown = 8;
+				chr->moveCountdown = CHAR_WALK_DELAY;
 			}
 		}
 		// Se o personagem já tiver feito o primeiro movimento,
@@ -150,7 +152,7 @@ void updatecharacter(character* chr, level* lvl)
 			free(chr->movToDir);
 			chr->movToDir = NULL;
 			chr->currmov = 0;
-			chr->moveCountdown = 8;
+			chr->moveCountdown = CHAR_WALK_DELAY;
 			
 			if(chr->x / TILESIZE_PX < 1)
 			{

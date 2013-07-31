@@ -17,6 +17,10 @@ Uint32 gameloop_count;
 level lvl;
 character chr;
 
+// Vetor contendo as informações das duas teclas
+// direcionais do teclado
+bool directionals[2];
+
 // Protótipos de funções globais
 void init();
 void update();
@@ -75,6 +79,10 @@ void init()
 	// Carregue o personagem
 	loadcharacter("brbr.chr", &chr);
 	initcharacter(&chr, &lvl);
+
+	// Inicie os direcionais
+	directionals[0] = false;
+	directionals[1] = false;
 }
 
 void update()
@@ -111,6 +119,17 @@ void update()
 			break;
 		}
 	}
+
+	// Mova o personagem de acordo.
+	// Ignore se ambos os direcionais forem pressionados
+	// ao mesmo tempo.
+	if(!(directionals[0] && directionals[1]))
+	{
+		if(directionals[0])
+			movchartodir(&chr, DIRECTION_LEFT);
+		if(directionals[1])
+			movchartodir(&chr, DIRECTION_RIGHT);
+	}
 }
 
 void draw()
@@ -136,14 +155,16 @@ void handleKeyboard(KeyboardKey key, bool isPressed)
 		running = false;
 		break;
 	case SDLK_LEFT:
-		// Mova o personagem para a esquerda
+		// Tecla direcional da esquerda
 		if(isPressed)
-			movchartodir(&chr, DIRECTION_LEFT);
+			directionals[0] = true;
+		else directionals[0] = false;
 		break;
 	case SDLK_RIGHT:
-		// Mova o personagem para a direita
+		// Tecla direcional da direita
 		if(isPressed)
-			movchartodir(&chr, DIRECTION_RIGHT);
+			directionals[1] = true;
+		else directionals[1] = false;
 		break;
 	}
 }
