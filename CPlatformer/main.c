@@ -23,6 +23,7 @@ bool directionals[2];
 
 // Protótipos de funções globais
 void init();
+void quit();
 void update();
 void handleKeyboard(KeyboardKey, bool);
 void handleMouse(int, int, MouseButton, bool);
@@ -45,6 +46,7 @@ int main(int argc, char** argv)
 	while(running)
 	{
 		gameloop_count = SDL_GetTicks();
+
 		// Lógica do jogo
 		update();
 		// Renderização do jogo
@@ -55,7 +57,7 @@ int main(int argc, char** argv)
 		if(1000.0 / FRAMERATE > SDL_GetTicks() - gameloop_count)
 			SDL_Delay(1000.0 / FRAMERATE - (SDL_GetTicks() - gameloop_count));
 	}
-	SDL_Quit();
+	quit();
 	return 0;
 }
 
@@ -83,6 +85,13 @@ void init()
 	// Inicie os direcionais
 	directionals[0] = false;
 	directionals[1] = false;
+}
+
+void quit()
+{
+	unloadlevel(&lvl);
+	unloadcharacter(&chr);
+	SDL_Quit();
 }
 
 void update()

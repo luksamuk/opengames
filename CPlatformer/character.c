@@ -194,7 +194,7 @@ void unloadcharacter(character* chr)
 	// frame e os frames em si.
 	free(chr->p.colors);
 	for(i = 0; i < chr->n_frames; i++)
-		free(chr->frames->colorfrompallete);
+		free(chr->frames[i].colorfrompallete);
 	free(chr->frames);
 }
 
