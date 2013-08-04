@@ -1,7 +1,7 @@
 opengames
 =========
 
-Pequenos jogos de exemplo com cÃ³digo aberto.
+Pequenos jogos de exemplo com código aberto.
 
 CBreakout
 ---------
@@ -33,3 +33,11 @@ Em ambos os casos, você precisará do SDL instalado em seu computador.
 No Linux, você pode instalar os pacotes libsdl1.2 e libsdl1.2-dev, e TALVEZ precisará do pacote freeglut3. Instale-os com os seu gerenciador de pacotes preferido.
 
 No Windows, além das bibliotecas de SDL e OpenGL instaladas no seu compilador, você precisará utilizar o arquivo SDL.dll incluso na pasta.
+
+CSonic
+------
+
+Engine de platformer baseada no Mega Drive/Genesis.
+
+Atualmente incluído:
+- Sistema de paletas em bitmask e conversão para byte.
