@@ -1,9 +1,15 @@
 #include "palette.h"
 
+GLfloat MASKTOFLOAT(color c)
+{
+	GLfloat res = c;
+	res /= 16;
+	return res;
+}
+
 color createcolor(byte r, byte g, byte b)
 {
-	color c;
-	c = 0x00;
+	color c = 0x0000;
 	// 0000 00000 0000 0000
 	MIXCOLOR(c,r);
 	// 0000 0000 0000 RRRR
@@ -18,15 +24,26 @@ color createcolor(byte r, byte g, byte b)
 	return c;
 }
 
-void palette_init(palette* p)
+void gpalette_load(palette* p)
 {
-	color c;
-	createcolor(COLOR_0, COLOR_0, COLOR_0);
+	int i;
+	p->data = malloc(sizeof(color) * MAX_COLORS_NOMODES);
+	
+	// REMEMBER: CornflowerBlue is 0x058E.
+	// TODO: Define logic for building all colors.
+	// Meanwhile all colors are black
+	for(i = 0; i < MAX_COLORS_NOMODES; i++)
+		p->data[i] = createcolor(COLOR_0, COLOR_0, COLOR_0);
 }
 
 void palette_load(palette* p)
 {
 	
+}
+
+void palette_unload(palette* p)
+{
+	free(p->data);
 }
 
 color getcolor(palette* p, int idx)
