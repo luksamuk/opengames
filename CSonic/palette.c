@@ -53,15 +53,35 @@ color createcolor(byte r, byte g, byte b)
 	return c;
 }
 
+void sortpalette_byhue(palette* pal, int min, int max)
+{
+	if(min >= max) return;
+
+	int p   = min,
+		q   = max,
+		mid = min + ((max - min) / 2);
+
+	while(p < q)
+	{
+		if(GETCOLORHUE(pal->data[p]) > GETCOLORHUE(pal->data[q]))
+		{
+			color c = pal->data[p];
+			pal->data[p] = pal->data[q];
+			pal->data[q] = c;
+		}
+		++p; --q;
+	}
+	sortpalette_byhue(pal, min, mid);
+	sortpalette_byhue(pal, mid + 1, max);
+}
+
 void gpalette_load(palette* p)
 {
 	byte i, j, k;
+	int l;
 	p->numcolors = MAX_COLORS_NOMODES;
-	p->data = malloc(sizeof(color) * p->numcolors);
-	
-	// REMEMBER: CornflowerBlue is 0x058E.
-	// TODO: Define logic for building all colors.
-	// Meanwhile all colors are black
+	p->data = malloc(sizeof(color) * MAX_COLORS_NOMODES);
+
 	int currentcolor = 0;
 	for(i = 0x00; i <= 0x0E; i += 0x02)
 		for(j = 0x00; j <= 0x0E; j += 0x02)
@@ -70,6 +90,7 @@ void gpalette_load(palette* p)
 				p->data[currentcolor] = createcolor(i, j, k);
 				currentcolor++;
 			}
+	sortpalette_byhue(p, 0, p->numcolors - 1);
 }
 
 void palette_load(palette* p, const char* filename)

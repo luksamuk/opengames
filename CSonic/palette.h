@@ -12,7 +12,7 @@
 
 // Definitions for building your own color.
 // Each definition is 8-bit sized
-#define COLOR_DEF_0          0x00
+#define COLOR_DEF_0              0x00
 #define COLOR_DEF_1              0x02
 #define COLOR_DEF_2              0x04
 #define COLOR_DEF_3              0x06
@@ -56,6 +56,9 @@ float GETCOLORHUE(color);
 
 // Creates a color from three bytes
 color createcolor(byte, byte, byte);
+
+// Sorts a palette by its colors' hue value
+void sortpalette_byhue(palette*, int, int);
 
 // Loads the global palette
 void  gpalette_load(palette*);

@@ -7,7 +7,7 @@
 #include "level.h"
 
 // 320x240, 30Hz
-#define WIN_WIDTH    640
+#define WIN_WIDTH    600
 #define WIN_HEIGHT   480
 #define REFRESHRATE 30.0
 
