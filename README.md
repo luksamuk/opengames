@@ -38,6 +38,7 @@ CSonic
 ------
 
 Engine de platformer baseada no Mega Drive/Genesis.
+Feito em C, utiliza SDL, OpenGL e GLUT.
 
 Atualmente incluído:
 - Sistema de paletas em bitmask e conversão para byte.
