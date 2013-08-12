@@ -6,6 +6,35 @@ float MASKTOFLOAT(color c)
 	res /= 16;
 	return res;
 }
+float GETCOLORHUE(color c)
+{
+	float r, g, b, MAX, MIN;
+	// Convert RGB(bitmask) to RGB(float)
+	r = MASKTOFLOAT(GETRCOLOR(c));
+	g = MASKTOFLOAT(GETGCOLOR(c));
+	b = MASKTOFLOAT(GETBCOLOR(c));
+
+	// Selects MAX value and MIN value
+	MAX = MIN = r;
+	if(MAX < g) MAX = g;
+	if(MAX < b) MAX = b;
+	if(MIN > g) MIN = g;
+	if(MIN > b) MIN = b;
+
+	if(!(MAX - MIN)) { MAX = 1.0f; MIN = 0.0f; }
+
+	// Finally, calculate hue and return
+	if(MAX == r)
+	{
+		float res = 60.0f * ((g - b) / (MAX - MIN));
+		if(g >= b) return res;
+		else return res += 360.0f;
+	}
+	else if(MAX == g)
+		return 60.0f * ((b - r) / (MAX - MIN)) + 120.0f;
+	else return 60.0f * ((r - g) / (MAX - MIN)) + 240.0f;
+
+}
 
 color createcolor(byte r, byte g, byte b)
 {
@@ -75,7 +104,7 @@ void palette_unload(palette* p)
 color getcolor(palette* p, int idx)
 {
 	if(idx < 0 || idx > 15)
-		return COLOR_0;
+		return COLOR_DEF_0;
 	return p->data[idx];
 }
 

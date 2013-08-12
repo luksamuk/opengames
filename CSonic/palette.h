@@ -12,14 +12,14 @@
 
 // Definitions for building your own color.
 // Each definition is 8-bit sized
-#define COLOR_0              0x00
-#define COLOR_1              0x02
-#define COLOR_2              0x04
-#define COLOR_3              0x06
-#define COLOR_4              0x08
-#define COLOR_5              0x0A
-#define COLOR_6              0x0C
-#define COLOR_7              0x0E
+#define COLOR_DEF_0          0x00
+#define COLOR_DEF_1              0x02
+#define COLOR_DEF_2              0x04
+#define COLOR_DEF_3              0x06
+#define COLOR_DEF_4              0x08
+#define COLOR_DEF_5              0x0A
+#define COLOR_DEF_6              0x0C
+#define COLOR_DEF_7              0x0E
 
 
 // Standard colors
@@ -51,6 +51,8 @@ typedef struct PALETTE_DEF
 
 // Converts color mask to GLfloat
 float MASKTOFLOAT(color);
+// Retrieves hue from a color
+float GETCOLORHUE(color);
 
 // Creates a color from three bytes
 color createcolor(byte, byte, byte);

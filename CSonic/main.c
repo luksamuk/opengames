@@ -212,17 +212,20 @@ void draw()
 	if(MOUSEPOS_X + MOUSEPOS_Y < MAX_COLORS_NOMODES)
 	{
 		if(currentmode == 0)
-			sprintf(output, "%d -> 0x%04X\nSHADOW",
+			sprintf(output, "%03d -> 0x%04X\nHUE %f\nSHADOW MODE",
 				MOUSEPOS_X + MOUSEPOS_Y,
-				SHADOWCOLOR(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]));
+				SHADOWCOLOR(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]),
+				GETCOLORHUE(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]));
 		else if(currentmode == 2)
-			sprintf(output, "%d -> 0x%04X\nHIGHLIGHT",
+			sprintf(output, "%03d -> 0x%04X\nHUE %f\nHIGHLIGHT MODE",
 				MOUSEPOS_X + MOUSEPOS_Y,
-				HIGHLIGHTCOLOR(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]));
+				HIGHLIGHTCOLOR(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]),
+				GETCOLORHUE(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]));
 		else
-			sprintf(output, "%d -> 0x%04X",
+			sprintf(output, "%03d -> 0x%04X\nHUE %f\nNORMAL MODE",
 				MOUSEPOS_X + MOUSEPOS_Y,
-				HIGHLIGHTCOLOR(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]));
+				MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y],
+				GETCOLORHUE(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]));
 
 
 		glColor3f(1.0f, 1.0f, 1.0f);
