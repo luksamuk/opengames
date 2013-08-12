@@ -7,7 +7,7 @@ endif
 SYSDIR = ./system
 BUILDDIR = ./build
 APPNAME = $(BUILDDIR)/csonic
-CFLAGS = -W -Wall -O2 -g
+CFLAGS = -W -Wall -O3 -g
 
 all: stack.o linkedlist.o
 	mkdir -p $(BUILDDIR)
