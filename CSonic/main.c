@@ -6,6 +6,7 @@
 Uint32  gameloop_c;
 bool    GAMERUN;
 palette MAINPALETTE;
+int currentmode;
 
 // Global functions prototype
 void init();
@@ -24,7 +25,7 @@ int main(int argc, char** argv)
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_WM_SetCaption(GAMENAME, NULL);
 	SDL_WM_SetIcon(SDL_LoadBMP(GAMEICON), NULL);
-	SDL_SetVideoMode(WIN_WIDTH, WIN_HEIGHT, 32, SDL_OPENGL);
+	SDL_SetVideoMode(WIN_WIDTH, WIN_HEIGHT, 16, SDL_OPENGL);
 
 	// Initialize game and load resources
 	init();
@@ -67,6 +68,7 @@ void init()
 		         1.0f);
 
 	// Init your game logic here.
+	currentmode = 1;
 }
 
 void load()
@@ -120,8 +122,16 @@ void handleKeyboard(KeyboardKey key, bool isPressed)
 	case SDLK_DOWN:
 		break;
 	case SDLK_LEFT:
+		if(isPressed && currentmode > 0)
+			currentmode--;
+		else if(isPressed && currentmode <= 0)
+			currentmode = 2;
 		break;
 	case SDLK_RIGHT:
+		if(isPressed && currentmode < 2)
+			currentmode++;
+		else if(isPressed && currentmode >= 2)
+			currentmode = 0;
 		break;
 	default:
 		break;
@@ -149,6 +159,28 @@ void draw()
 	glLoadIdentity();
 
 	// Render your game here.
+	int i, j;
+	float icoord, jcoord;
+	for(i = 0; i < (int)(WIN_WIDTH / 10.0f); i++)
+	{
+		icoord = i * 10.0f;
+		for(j = 0; j < (int)(WIN_HEIGHT / 10.0f); j++)
+		{
+			jcoord = j * 10.0f;
+			color c = MAINPALETTE.data[(i * 10) + j];
+
+			if(currentmode == 0)      c = SHADOWCOLOR(c);
+			else if(currentmode == 2) c = HIGHLIGHTCOLOR(c); 
+			
+			glColor3b(GETRCOLOR(c), GETGCOLOR(c), GETBCOLOR(c));
+			glBegin(GL_QUADS);
+				glVertex2f(0.0f + icoord, 0.0f + jcoord);
+				glVertex2f(10.0f + icoord, 0.0f + jcoord);
+				glVertex2f(10.0f + icoord, 10.0f + jcoord);
+				glVertex2f(0.0f + icoord, 10.0f + jcoord);
+			glEnd();
+		}
+	}
 }
 
 void quit()

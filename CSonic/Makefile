@@ -1,8 +1,29 @@
 ifdef SystemRoot
-	FLAGS = -lming32 -lSDLmain -lSDL -lopengl32
+	LINKS = -lming32 -lSDLmain -lSDL -lopengl32
 else
-	FLAGS = -lSDL -lGL
+	LINKS = -lSDL -lGL
 endif
 
-all:
-	gcc palette.c level.c main.c -o csonic $(FLAGS)
+SYSDIR = ./system
+BUILDDIR = ./build
+APPNAME = $(BUILDDIR)/csonic
+CFLAGS = -W -Wall
+
+all: stack.o linkedlist.o
+	mkdir $(BUILDDIR)
+	gcc -o $(APPNAME) stack.o linkedlist.o palette.c level.c main.c $(LINKS) $(CFLAGS)
+	mkdir $(BUILDDIR)/data
+	mkdir $(BUILDDIR)/resources
+	cp ./resources/icon.bmp $(BUILDDIR)/resources/icon.bmp
+
+stack.o: $(SYSDIR)/stack.c $(SYSDIR)/stack.h
+	gcc -o stack.o -c $(SYSDIR)/stack.c $(CFLAGS)
+
+linkedlist.o: $(SYSDIR)/linkedlist.c $(SYSDIR)/linkedlist.h
+	gcc -o linkedlist.o -c $(SYSDIR)/linkedlist.c $(CFLAGS)
+
+clean:
+	rm -rf *.o
+
+delete: clean
+	rm -rf $(BUILDDIR)

@@ -12,8 +12,8 @@
 #define REFRESHRATE 30.0
 
 // TODO: Change your game name and icon here
-#define GAMENAME "CSonic Engine"
-#define GAMEICON "Resources/icon.bmp"
+#define GAMENAME    "CSonic Engine"
+#define GAMEICON    "resources/icon.bmp"
 
 // External definition for ending the game.
 extern void quit();

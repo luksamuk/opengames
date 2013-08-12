@@ -9,5 +9,7 @@
 #include <SDL/SDL.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include "system/stack.h"
+#include "system/linkedlist.h"
 
 #endif

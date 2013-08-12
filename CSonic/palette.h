@@ -19,7 +19,7 @@
 #define COLOR_4              0x08
 #define COLOR_5              0x0A
 #define COLOR_6              0x0C
-#define COLOR_7              0x0F
+#define COLOR_7              0x0E
 
 
 // Standard colors
@@ -45,11 +45,12 @@ typedef word color;
 
 typedef struct PALETTE_DEF
 {
+	int numcolors;
 	color* data;
 } palette;
 
 // Converts color mask to GLfloat
-GLfloat MASKTOFLOAT(color);
+float MASKTOFLOAT(color);
 
 // Creates a color from three bytes
 color createcolor(byte, byte, byte);
@@ -58,7 +59,10 @@ color createcolor(byte, byte, byte);
 void  gpalette_load(palette*);
 
 // Loads a palette from a file
-void  palette_load(palette*);
+void  palette_load(palette*, const char*);
+
+// Exports palette to file
+void  palette_export(palette*, const char*);
 
 // Unloads any palette
 void  palette_unload(palette*);
