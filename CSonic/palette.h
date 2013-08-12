@@ -23,9 +23,9 @@
 
 
 // Standard colors
-#define COLOR_BLACK          0x0000
-#define COLOR_WHITE          0x0FFF
-#define COLOR_CORNFLOWERBLUE 0x068F
+#define COLOR_BLACK          SHADOWCOLOR(0x0000)
+#define COLOR_WHITE          HIGHLIGHTCOLOR(0x0EEE)
+#define COLOR_CORNFLOWERBLUE 0x068E
 
 
 // Color creation operations

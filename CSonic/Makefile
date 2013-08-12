@@ -1,7 +1,7 @@
 ifdef SystemRoot
-	LINKS = -lming32 -lSDLmain -lSDL -lopengl32
+	LINKS = -lming32 -lSDLmain -lSDL -lopengl32 -lglut
 else
-	LINKS = -lSDL -lGL
+	LINKS = -lSDL -lGL -lglut
 endif
 
 SYSDIR = ./system
@@ -10,10 +10,10 @@ APPNAME = $(BUILDDIR)/csonic
 CFLAGS = -W -Wall
 
 all: stack.o linkedlist.o
-	mkdir $(BUILDDIR)
+	mkdir -p $(BUILDDIR)
 	gcc -o $(APPNAME) stack.o linkedlist.o palette.c level.c main.c $(LINKS) $(CFLAGS)
-	mkdir $(BUILDDIR)/data
-	mkdir $(BUILDDIR)/resources
+	mkdir -p $(BUILDDIR)/data
+	mkdir -p $(BUILDDIR)/resources
 	cp ./resources/icon.bmp $(BUILDDIR)/resources/icon.bmp
 
 stack.o: $(SYSDIR)/stack.c $(SYSDIR)/stack.h

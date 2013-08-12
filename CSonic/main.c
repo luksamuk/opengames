@@ -8,12 +8,16 @@ bool    GAMERUN;
 palette MAINPALETTE;
 int currentmode;
 
+int MOUSEPOS_X, MOUSEPOS_Y;
+
 // Global functions prototype
 void init();
 void load();
 void update();
 void handleKeyboard(KeyboardKey, bool);
-void handleMouse(int, int, MouseButton, bool);
+void handleMouseClick(int, int, MouseButton, bool);
+void handleMouseMotion(int, int);
+void renderBitmapString(float, float, char*);
 void draw();
 void quit();
 void unload();
@@ -22,6 +26,7 @@ void unload();
 int main(int argc, char** argv)
 {
 	//Initialize SDL
+	glutInit(&argc, argv);
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_WM_SetCaption(GAMENAME, NULL);
 	SDL_WM_SetIcon(SDL_LoadBMP(GAMEICON), NULL);
@@ -69,6 +74,7 @@ void init()
 
 	// Init your game logic here.
 	currentmode = 1;
+	MOUSEPOS_X = MOUSEPOS_Y = 0;
 }
 
 void load()
@@ -96,11 +102,14 @@ void update()
 		case SDL_KEYUP:
 			handleKeyboard(event.key.keysym.sym, false);
 			break;
+		case SDL_MOUSEMOTION:
+			handleMouseMotion(event.button.x, event.button.y);
+			break;
 		case SDL_MOUSEBUTTONDOWN:
-			handleMouse(event.button.x, event.button.y, event.button.button, true);
+			handleMouseClick(event.button.x, event.button.y, event.button.button, true);
 			break;
 		case SDL_MOUSEBUTTONUP:
-			handleMouse(event.button.x, event.button.y, event.button.button, false);
+			handleMouseClick(event.button.x, event.button.y, event.button.button, false);
 			break;
 		// TODO: Handle more events here
 		default:
@@ -138,7 +147,7 @@ void handleKeyboard(KeyboardKey key, bool isPressed)
 	}
 }
 
-void handleMouse(int X, int Y, MouseButton button, bool isPressed)
+void handleMouseClick(int X, int Y, MouseButton button, bool isPressed)
 {
 	// TODO: Edit this accordingly
 	switch(button)
@@ -152,6 +161,26 @@ void handleMouse(int X, int Y, MouseButton button, bool isPressed)
 	}
 }
 
+void handleMouseMotion(int X, int Y)
+{
+	MOUSEPOS_X = X; MOUSEPOS_Y = Y;
+}
+
+void renderBitmapString(float x, float y, char *string)
+{
+	char* c;
+    glRasterPos2f(x, y);
+    for (c = string; *c != '\0'; c++)
+    {
+        if((*c) == '\n')
+        {
+            y += 12;
+            glRasterPos2f(x, y);
+        }
+        else glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
+    }
+}
+
 void draw()
 {
 	// Get rid of artifacts, reset draw pos
@@ -159,27 +188,45 @@ void draw()
 	glLoadIdentity();
 
 	// Render your game here.
+	char* output = malloc(sizeof(char) * 255);
 	int i, j;
-	float icoord, jcoord;
-	for(i = 0; i < (int)(WIN_WIDTH / 10.0f); i++)
+	for(i = 0; i < WIN_WIDTH; i++)
 	{
-		icoord = i * 10.0f;
-		for(j = 0; j < (int)(WIN_HEIGHT / 10.0f); j++)
+		for(j = 0; j < WIN_HEIGHT; j++)
 		{
-			jcoord = j * 10.0f;
-			color c = MAINPALETTE.data[(i * 10) + j];
+			if(i + j >= MAX_COLORS_NOMODES) break;
+			color c = MAINPALETTE.data[i + j];
 
 			if(currentmode == 0)      c = SHADOWCOLOR(c);
 			else if(currentmode == 2) c = HIGHLIGHTCOLOR(c); 
 			
 			glColor3b(GETRCOLOR(c), GETGCOLOR(c), GETBCOLOR(c));
 			glBegin(GL_QUADS);
-				glVertex2f(0.0f + icoord, 0.0f + jcoord);
-				glVertex2f(10.0f + icoord, 0.0f + jcoord);
-				glVertex2f(10.0f + icoord, 10.0f + jcoord);
-				glVertex2f(0.0f + icoord, 10.0f + jcoord);
+				glVertex2f(0.0f + i, 0.0f + j);
+				glVertex2f(1.0f + i, 0.0f + j);
+				glVertex2f(1.0f + i, 1.0f + j);
+				glVertex2f(0.0f + i, 1.0f + j);
 			glEnd();
 		}
+	}
+	if(MOUSEPOS_X + MOUSEPOS_Y < MAX_COLORS_NOMODES)
+	{
+		if(currentmode == 0)
+			sprintf(output, "%d -> 0x%04X\nSHADOW",
+				MOUSEPOS_X + MOUSEPOS_Y,
+				SHADOWCOLOR(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]));
+		else if(currentmode == 2)
+			sprintf(output, "%d -> 0x%04X\nHIGHLIGHT",
+				MOUSEPOS_X + MOUSEPOS_Y,
+				HIGHLIGHTCOLOR(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]));
+		else
+			sprintf(output, "%d -> 0x%04X",
+				MOUSEPOS_X + MOUSEPOS_Y,
+				HIGHLIGHTCOLOR(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]));
+
+
+		glColor3f(1.0f, 1.0f, 1.0f);
+		renderBitmapString(10.0f, 20.0f, output);
 	}
 }
 
