@@ -132,7 +132,7 @@ void update()
 				handleKeyboard(SDLK_RIGHT, true);
 			else if(event.jhat.value == SDL_HAT_LEFT)
 				handleKeyboard(SDLK_LEFT, true);
-			else if(event.jhat.value == SDL_HAT_CENTERED)
+			else
 			{
 				handleKeyboard(SDLK_RIGHT, false);
 				handleKeyboard(SDLK_LEFT, false);
