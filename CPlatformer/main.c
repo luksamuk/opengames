@@ -16,6 +16,7 @@ bool running;
 Uint32 gameloop_count;
 level lvl;
 character chr;
+SDL_Joystick* joystick;
 
 // Vetor contendo as informações das duas teclas
 // direcionais do teclado
@@ -26,14 +27,13 @@ void init();
 void quit();
 void update();
 void handleKeyboard(KeyboardKey, bool);
-void handleMouse(int, int, MouseButton, bool);
 void draw();
 
 // Função principal
 int main(int argc, char** argv)
 {
 	// Inicia o SDL
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK);
 	// Troca o nome na janela
 	SDL_WM_SetCaption("CPlatformer", NULL);
 	// Define largura e altura da tela com um buffer de 32bit
@@ -82,6 +82,10 @@ void init()
 	loadcharacter("brbr.chr", &chr);
 	initcharacter(&chr, &lvl);
 
+	// Caso haja um joystick, carregue-o.
+	if(SDL_NumJoysticks() >= 1)
+		joystick = SDL_JoystickOpen(0);
+
 	// Inicie os direcionais
 	directionals[0] = false;
 	directionals[1] = false;
@@ -91,6 +95,7 @@ void quit()
 {
 	unloadlevel(&lvl);
 	unloadcharacter(&chr);
+	SDL_JoystickClose(joystick);
 	SDL_Quit();
 }
 
@@ -114,17 +119,32 @@ void update()
 			break;
 		// Repasse os sinais de teclado.
 		case SDL_KEYDOWN:
-			handleKeyboard(event.key.keysym.sym, true);
+			if(!joystick)
+				handleKeyboard(event.key.keysym.sym, true);
 			break;
 		case SDL_KEYUP:
-			handleKeyboard(event.key.keysym.sym, false);
+			if(!joystick)
+				handleKeyboard(event.key.keysym.sym, false);
 			break;
-		// Repasse os sinais de mouse.
-		case SDL_MOUSEBUTTONDOWN:
-			handleMouse(event.button.x, event.button.y, event.button.button, true);
+		// Repasse os sinais de Joystick
+		case SDL_JOYHATMOTION:
+			if(event.jhat.value == SDL_HAT_RIGHT)
+				handleKeyboard(SDLK_RIGHT, true);
+			else if(event.jhat.value == SDL_HAT_LEFT)
+				handleKeyboard(SDLK_LEFT, true);
+			else if(event.jhat.value == SDL_HAT_CENTERED)
+			{
+				handleKeyboard(SDLK_RIGHT, false);
+				handleKeyboard(SDLK_LEFT, false);
+			}
 			break;
-		case SDL_MOUSEBUTTONUP:
-			handleMouse(event.button.x, event.button.y, event.button.button, false);
+		case SDL_JOYBUTTONDOWN:
+			if(event.jbutton.button == 1)
+				running = false;
+			break;
+		case SDL_JOYBUTTONUP:
+			break;
+		default:
 			break;
 		}
 	}
@@ -174,24 +194,6 @@ void handleKeyboard(KeyboardKey key, bool isPressed)
 		if(isPressed)
 			directionals[1] = true;
 		else directionals[1] = false;
-		break;
-	}
-}
-
-void handleMouse(int X, int Y, MouseButton button, bool isPressed)
-{
-	// Por enquanto nada. Apenas referência para
-	// ações futuras
-	switch(button)
-	{
-	// Botão esquerdo do mouse
-	case SDL_BUTTON_LEFT:
-		break;
-	// Botão direito do mouse
-	case SDL_BUTTON_RIGHT:
-		break;
-	// Botão do meio do mouse
-	case SDL_BUTTON_MIDDLE:
 		break;
 	}
 }
