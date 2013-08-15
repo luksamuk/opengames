@@ -41,4 +41,6 @@ Engine de platformer baseada no Mega Drive/Genesis.
 Feito em C, utiliza SDL, OpenGL e GLUT.
 
 Atualmente incluído:
-- Sistema de paletas em bitmask e conversão para byte.
+- Sistema completo de paletas de cores em bitmask;
+- Funções devidas de manipulação de paletas;
+- Função para seleção de cor a partir da paleta, similar ao OpenGL.
