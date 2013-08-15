@@ -7,8 +7,8 @@
 #include "level.h"
 
 // 320x240, 30Hz
-#define WIN_WIDTH    600
-#define WIN_HEIGHT   480
+#define WIN_WIDTH    320
+#define WIN_HEIGHT   240
 #define REFRESHRATE 30.0
 
 // TODO: Change your game name and icon here

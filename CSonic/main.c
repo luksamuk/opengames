@@ -11,6 +11,8 @@ int currentmode;
 int MOUSEPOS_X, MOUSEPOS_Y;
 
 // Global functions prototype
+void renderpalette(palette*);
+
 void init();
 void load();
 void update();
@@ -30,7 +32,7 @@ int main(int argc, char** argv)
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_WM_SetCaption(GAMENAME, NULL);
 	SDL_WM_SetIcon(SDL_LoadBMP(GAMEICON), NULL);
-	SDL_SetVideoMode(WIN_WIDTH, WIN_HEIGHT, 16, SDL_OPENGL);
+	SDL_SetVideoMode(WIN_WIDTH, WIN_HEIGHT, 32, SDL_OPENGL);
 
 	// Initialize game and load resources
 	init();
@@ -188,27 +190,10 @@ void draw()
 	glLoadIdentity();
 
 	// Render your game here.
-	char* output = malloc(sizeof(char) * 255);
-	int i, j;
-	for(i = 0; i < WIN_WIDTH; i++)
-	{
-		for(j = 0; j < WIN_HEIGHT; j++)
-		{
-			if(i + j >= MAX_COLORS_NOMODES) break;
-			color c = MAINPALETTE.data[i + j];
 
-			if(currentmode == 0)      c = SHADOWCOLOR(c);
-			else if(currentmode == 2) c = HIGHLIGHTCOLOR(c); 
-			
-			glColor3b(GETRCOLOR(c), GETGCOLOR(c), GETBCOLOR(c));
-			glBegin(GL_QUADS);
-				glVertex2f(0.0f + i, 0.0f + j);
-				glVertex2f(1.0f + i, 0.0f + j);
-				glVertex2f(1.0f + i, 1.0f + j);
-				glVertex2f(0.0f + i, 1.0f + j);
-			glEnd();
-		}
-	}
+	renderpalette(&MAINPALETTE);
+
+	/*
 	if(MOUSEPOS_X + MOUSEPOS_Y < MAX_COLORS_NOMODES)
 	{
 		if(currentmode == 0)
@@ -230,6 +215,32 @@ void draw()
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 		renderBitmapString(10.0f, 20.0f, output);
+
+	} */
+}
+
+void renderpalette(palette* pal)
+{
+	int i;
+	float colorpsize = (float)WIN_WIDTH / (float)pal->numcolors;
+
+	for(i = 0; i < pal->numcolors; i++)
+	{
+		float icoord = (float)i * colorpsize;
+		color c = pal->data[i];
+		if(currentmode == 0)      c = SHADOWCOLOR(c);
+		else if(currentmode == 2) c = HIGHLIGHTCOLOR(c);
+
+		glColor3b(MASKTOBYTE(GETRCOLOR(c)),
+			      MASKTOBYTE(GETGCOLOR(c)),
+			      MASKTOBYTE(GETBCOLOR(c)));
+		glBegin(GL_QUADS);
+				glVertex2f(icoord, 0.0f);
+				glVertex2f(icoord + colorpsize, 0.0f);
+				glVertex2f(icoord + colorpsize, colorpsize * 50);
+				glVertex2f(icoord, colorpsize * 50);
+		glEnd();
+
 	}
 }
 

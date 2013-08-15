@@ -39,7 +39,7 @@
 #define GETRCOLOR(x) ((x ^ ~(~x | 0x000F << 8)) >> 8)
 #define GETGCOLOR(x) ((x ^ ~(~x | 0x000F << 4)) >> 4)
 #define GETBCOLOR(x) (x ^ ~(~x | 0x000F))
-#define MASKTOBYTE(x) (x * 16)
+#define MASKTOBYTE(x) (x * 8)
 
 typedef word color;
 
