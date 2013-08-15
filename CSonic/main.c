@@ -194,7 +194,7 @@ void renderpalette(palette* pal)
 	for(i = 0; i < pal->numcolors; i++)
 	{
 		float icoord = (float)i * colorpsize;
-		color c = pal->data[i];
+		color c = getcolor(pal, i);
 		glColorM(SHADOWCOLOR(c));
 		glBegin(GL_QUADS);
 				glVertex2f(icoord, 0.0f);
@@ -207,7 +207,7 @@ void renderpalette(palette* pal)
 	for(i = 0; i < pal->numcolors; i++)
 	{
 		float icoord = (float)i * colorpsize;
-		color c = pal->data[i];
+		color c = getcolor(pal, i);
 		glColorM(c);
 		glBegin(GL_QUADS);
 				glVertex2f(icoord, colorpsize * 25);
@@ -220,7 +220,7 @@ void renderpalette(palette* pal)
 	for(i = 0; i < pal->numcolors; i++)
 	{
 		float icoord = (float)i * colorpsize;
-		color c = pal->data[i];
+		color c = getcolor(pal, i);
 		glColorM(HIGHLIGHTCOLOR(c));
 		glBegin(GL_QUADS);
 				glVertex2f(icoord, (colorpsize * 25) + colorpsize * 25);

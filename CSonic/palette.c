@@ -98,7 +98,7 @@ void palette_unload(palette* p)
 
 color getcolor(palette* p, int idx)
 {
-	if(idx < 0 || idx > 15)
+	if(idx < 0 || idx > p->numcolors)
 		return COLOR_DEF_0;
 	return p->data[idx];
 }
