@@ -68,10 +68,7 @@ void init()
 		glOrtho(0, WIN_WIDTH, WIN_HEIGHT, 0, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
 	
-	glClearColor(MASKTOFLOAT(GETRCOLOR(COLOR_CORNFLOWERBLUE)),
-		         MASKTOFLOAT(GETGCOLOR(COLOR_CORNFLOWERBLUE)),
-		         MASKTOFLOAT(GETBCOLOR(COLOR_CORNFLOWERBLUE)),
-		         1.0f);
+	glClearColorM(COLOR_CORNFLOWERBLUE);
 
 	// Init your game logic here.
 	MOUSEPOS_X = MOUSEPOS_Y = -1;
