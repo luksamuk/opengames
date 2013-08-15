@@ -23,8 +23,8 @@
 
 
 // Standard colors
-#define COLOR_BLACK          SHADOWCOLOR(0x0000)
-#define COLOR_WHITE          HIGHLIGHTCOLOR(0x0EEE)
+#define COLOR_BLACK          0x0000
+#define COLOR_WHITE          0x0EEE
 #define COLOR_CORNFLOWERBLUE 0x068E
 
 
@@ -56,9 +56,6 @@ float GETCOLORHUE(color);
 
 // Creates a color from three bytes
 color createcolor(byte, byte, byte);
-
-// Sorts a palette by its colors' hue value
-void sortpalette_byhue(palette*, int, int);
 
 // Loads the global palette
 void  gpalette_load(palette*);

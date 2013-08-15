@@ -53,32 +53,9 @@ color createcolor(byte r, byte g, byte b)
 	return c;
 }
 
-void sortpalette_byhue(palette* pal, int min, int max)
-{
-	if(min >= max) return;
-
-	int p   = min,
-		q   = max,
-		mid = min + ((max - min) / 2);
-
-	while(p < q)
-	{
-		if(GETCOLORHUE(pal->data[p]) > GETCOLORHUE(pal->data[q]))
-		{
-			color c = pal->data[p];
-			pal->data[p] = pal->data[q];
-			pal->data[q] = c;
-		}
-		++p; --q;
-	}
-	sortpalette_byhue(pal, min, mid);
-	sortpalette_byhue(pal, mid + 1, max);
-}
-
 void gpalette_load(palette* p)
 {
 	byte i, j, k;
-	int l;
 	p->numcolors = MAX_COLORS_NOMODES;
 	p->data = malloc(sizeof(color) * MAX_COLORS_NOMODES);
 
@@ -90,12 +67,10 @@ void gpalette_load(palette* p)
 				p->data[currentcolor] = createcolor(i, j, k);
 				currentcolor++;
 			}
-	sortpalette_byhue(p, 0, p->numcolors - 1);
 }
 
 void palette_load(palette* p, const char* filename)
 {
-	int i;
 	FILE* file;
 	file = fopen(filename, "rb");
 	if(!file) return;
@@ -108,7 +83,6 @@ void palette_load(palette* p, const char* filename)
 
 void  palette_export(palette* p, const char* filename)
 {
-	int i;
 	FILE* file;
 	file = fopen(filename, "wb");
 	if(!file) return;

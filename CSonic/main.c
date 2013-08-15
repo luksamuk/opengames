@@ -192,38 +192,15 @@ void draw()
 	// Render your game here.
 
 	renderpalette(&MAINPALETTE);
-
-	/*
-	if(MOUSEPOS_X + MOUSEPOS_Y < MAX_COLORS_NOMODES)
-	{
-		if(currentmode == 0)
-			sprintf(output, "%03d -> 0x%04X\nHUE %f\nSHADOW MODE",
-				MOUSEPOS_X + MOUSEPOS_Y,
-				SHADOWCOLOR(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]),
-				GETCOLORHUE(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]));
-		else if(currentmode == 2)
-			sprintf(output, "%03d -> 0x%04X\nHUE %f\nHIGHLIGHT MODE",
-				MOUSEPOS_X + MOUSEPOS_Y,
-				HIGHLIGHTCOLOR(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]),
-				GETCOLORHUE(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]));
-		else
-			sprintf(output, "%03d -> 0x%04X\nHUE %f\nNORMAL MODE",
-				MOUSEPOS_X + MOUSEPOS_Y,
-				MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y],
-				GETCOLORHUE(MAINPALETTE.data[MOUSEPOS_X + MOUSEPOS_Y]));
-
-
-		glColor3f(1.0f, 1.0f, 1.0f);
-		renderBitmapString(10.0f, 20.0f, output);
-
-	} */
 }
 
 void renderpalette(palette* pal)
 {
 	int i;
 	float colorpsize = (float)WIN_WIDTH / (float)pal->numcolors;
+	char* output = malloc(sizeof(char) * 255);
 
+	// Render line of colors
 	for(i = 0; i < pal->numcolors; i++)
 	{
 		float icoord = (float)i * colorpsize;
@@ -241,6 +218,33 @@ void renderpalette(palette* pal)
 				glVertex2f(icoord, colorpsize * 50);
 		glEnd();
 
+	}
+
+	// Render color info
+	if(MOUSEPOS_Y <= colorpsize * 50)
+	{
+		int i = MOUSEPOS_X / colorpsize;
+		if(currentmode == 0)
+			sprintf(output, "%03d -> 0x%04X\nHUE %f\nSHADOW MODE",
+				i,
+				SHADOWCOLOR(MAINPALETTE.data[i]),
+				GETCOLORHUE(MAINPALETTE.data[i]));
+		else if(currentmode == 2)
+			sprintf(output, "%03d -> 0x%04X\nHUE %f\nHIGHLIGHT MODE",
+				i,
+				HIGHLIGHTCOLOR(MAINPALETTE.data[i]),
+				GETCOLORHUE(MAINPALETTE.data[i]));
+		else
+			sprintf(output, "%03d -> 0x%04X\nHUE %f\nNORMAL MODE",
+				i,
+				MAINPALETTE.data[i],
+				GETCOLORHUE(MAINPALETTE.data[i]));
+
+
+		glColor3b(MASKTOBYTE(GETRCOLOR(COLOR_WHITE)),
+				  MASKTOBYTE(GETGCOLOR(COLOR_WHITE)),
+				  MASKTOBYTE(GETBCOLOR(COLOR_WHITE)));
+		renderBitmapString(10.0f, (colorpsize * 50) + 10.0f, output);
 	}
 }
 
