@@ -6,7 +6,6 @@
 Uint32  gameloop_c;
 bool    GAMERUN;
 palette MAINPALETTE;
-int currentmode;
 
 int MOUSEPOS_X, MOUSEPOS_Y;
 
@@ -75,8 +74,7 @@ void init()
 		         1.0f);
 
 	// Init your game logic here.
-	currentmode = 1;
-	MOUSEPOS_X = MOUSEPOS_Y = 0;
+	MOUSEPOS_X = MOUSEPOS_Y = -1;
 }
 
 void load()
@@ -133,16 +131,8 @@ void handleKeyboard(KeyboardKey key, bool isPressed)
 	case SDLK_DOWN:
 		break;
 	case SDLK_LEFT:
-		if(isPressed && currentmode > 0)
-			currentmode--;
-		else if(isPressed && currentmode <= 0)
-			currentmode = 2;
 		break;
 	case SDLK_RIGHT:
-		if(isPressed && currentmode < 2)
-			currentmode++;
-		else if(isPressed && currentmode >= 2)
-			currentmode = 0;
 		break;
 	default:
 		break;
@@ -200,47 +190,55 @@ void renderpalette(palette* pal)
 	float colorpsize = (float)WIN_WIDTH / (float)pal->numcolors;
 	char* output = malloc(sizeof(char) * 255);
 
-	// Render line of colors
+	// Render lines of colors
 	for(i = 0; i < pal->numcolors; i++)
 	{
 		float icoord = (float)i * colorpsize;
 		color c = pal->data[i];
-		if(currentmode == 0)      c = SHADOWCOLOR(c);
-		else if(currentmode == 2) c = HIGHLIGHTCOLOR(c);
-
-		glColorM(c);
+		glColorM(SHADOWCOLOR(c));
 		glBegin(GL_QUADS);
 				glVertex2f(icoord, 0.0f);
 				glVertex2f(icoord + colorpsize, 0.0f);
-				glVertex2f(icoord + colorpsize, colorpsize * 50);
-				glVertex2f(icoord, colorpsize * 50);
+				glVertex2f(icoord + colorpsize, colorpsize * 25);
+				glVertex2f(icoord, colorpsize * 25);
+		glEnd();
+
+	}
+	for(i = 0; i < pal->numcolors; i++)
+	{
+		float icoord = (float)i * colorpsize;
+		color c = pal->data[i];
+		glColorM(c);
+		glBegin(GL_QUADS);
+				glVertex2f(icoord, colorpsize * 25);
+				glVertex2f(icoord + colorpsize, colorpsize * 25);
+				glVertex2f(icoord + colorpsize, (colorpsize * 25) + colorpsize * 25);
+				glVertex2f(icoord, (colorpsize * 25) + colorpsize * 25);
+		glEnd();
+
+	}
+	for(i = 0; i < pal->numcolors; i++)
+	{
+		float icoord = (float)i * colorpsize;
+		color c = pal->data[i];
+		glColorM(HIGHLIGHTCOLOR(c));
+		glBegin(GL_QUADS);
+				glVertex2f(icoord, (colorpsize * 25) + colorpsize * 25);
+				glVertex2f(icoord + colorpsize, (colorpsize * 25) + colorpsize * 25);
+				glVertex2f(icoord + colorpsize, (colorpsize * 25) + (colorpsize * 25) * 2);
+				glVertex2f(icoord, (colorpsize * 25) + (colorpsize * 25) * 2);
 		glEnd();
 
 	}
 
 	// Render color info
-	if(MOUSEPOS_Y <= colorpsize * 50)
+	if(MOUSEPOS_Y <= colorpsize * 75 && MOUSEPOS_Y >= 0)
 	{
 		int i = MOUSEPOS_X / colorpsize;
-		if(currentmode == 0)
-			sprintf(output, "%03d -> 0x%04X\nHUE %f\nSHADOW MODE",
-				i,
-				SHADOWCOLOR(MAINPALETTE.data[i]),
-				GETCOLORHUE(MAINPALETTE.data[i]));
-		else if(currentmode == 2)
-			sprintf(output, "%03d -> 0x%04X\nHUE %f\nHIGHLIGHT MODE",
-				i,
-				HIGHLIGHTCOLOR(MAINPALETTE.data[i]),
-				GETCOLORHUE(MAINPALETTE.data[i]));
-		else
-			sprintf(output, "%03d -> 0x%04X\nHUE %f\nNORMAL MODE",
-				i,
-				MAINPALETTE.data[i],
-				GETCOLORHUE(MAINPALETTE.data[i]));
-
+		sprintf(output, "%03d -> 0x%04X", i, SHADOWCOLOR(MAINPALETTE.data[i]));
 
 		glColorM(COLOR_WHITE);
-		renderBitmapString(10.0f, (colorpsize * 50) + 10.0f, output);
+		renderBitmapString(5.0f, (colorpsize * 75) + 10.0f, output);
 	}
 }
 
