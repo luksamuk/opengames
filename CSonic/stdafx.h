@@ -10,7 +10,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
-#include "system/stack.h"
-#include "system/linkedlist.h"
+//#include "system/stack.h"
+//#include "system/linkedlist.h"
 
 #endif
