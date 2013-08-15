@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_WM_SetCaption(GAMENAME, NULL);
 	SDL_WM_SetIcon(SDL_LoadBMP(GAMEICON), NULL);
-	SDL_SetVideoMode(WIN_WIDTH, WIN_HEIGHT, 32, SDL_OPENGL);
+	SDL_SetVideoMode(WIN_WIDTH, WIN_HEIGHT, 8, SDL_OPENGL);
 
 	// Initialize game and load resources
 	init();
@@ -208,9 +208,7 @@ void renderpalette(palette* pal)
 		if(currentmode == 0)      c = SHADOWCOLOR(c);
 		else if(currentmode == 2) c = HIGHLIGHTCOLOR(c);
 
-		glColor3b(MASKTOBYTE(GETRCOLOR(c)),
-			      MASKTOBYTE(GETGCOLOR(c)),
-			      MASKTOBYTE(GETBCOLOR(c)));
+		glColorM(c);
 		glBegin(GL_QUADS);
 				glVertex2f(icoord, 0.0f);
 				glVertex2f(icoord + colorpsize, 0.0f);
@@ -241,9 +239,7 @@ void renderpalette(palette* pal)
 				GETCOLORHUE(MAINPALETTE.data[i]));
 
 
-		glColor3b(MASKTOBYTE(GETRCOLOR(COLOR_WHITE)),
-				  MASKTOBYTE(GETGCOLOR(COLOR_WHITE)),
-				  MASKTOBYTE(GETBCOLOR(COLOR_WHITE)));
+		glColorM(COLOR_WHITE);
 		renderBitmapString(10.0f, (colorpsize * 50) + 10.0f, output);
 	}
 }

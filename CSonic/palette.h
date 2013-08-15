@@ -32,7 +32,7 @@
 #define NEXTCOLOR(x)  (x = (x << 4))
 #define MIXCOLOR(x,y) (x = (x | y))
 #define SHADOWCOLOR(x) (x >> 1)
-#define HIGHLIGHTCOLOR(x) ((x >> 1) + 0x0077)
+#define HIGHLIGHTCOLOR(x) ((x >> 1) + 0x0777)
 
 
 // Color extraction operations
@@ -48,6 +48,7 @@ typedef struct PALETTE_DEF
 	int numcolors;
 	color* data;
 } palette;
+
 
 // Converts color mask to GLfloat
 float MASKTOFLOAT(color);

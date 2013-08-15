@@ -21,4 +21,12 @@ extern void quit();
 // External definition for the main palette
 extern palette MAINPALETTE;
 
+// Sets OpenGL to render a color from the palette
+void glColorM(color c)
+{
+	glColor3b(MASKTOBYTE(GETRCOLOR(c)),
+			  MASKTOBYTE(GETGCOLOR(c)),
+			  MASKTOBYTE(GETBCOLOR(c)));
+}
+
 #endif
