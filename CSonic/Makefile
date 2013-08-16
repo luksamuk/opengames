@@ -36,7 +36,7 @@ BUILDDIR = build
 CFLAGS = -W -Wall -O3 -g
 
 all: mkdirs
-	gcc -o $(APPNAME) palette.c level.c main.c $(LINKS) $(CFLAGS)
+	gcc -o $(APPNAME) input.c palette.c level.c main.c $(LINKS) $(CFLAGS)
 	$(COPY) $(ICONPATH) $(ENDICONPATH)
 	$(COPYSDL)
 

@@ -6,7 +6,8 @@
 Uint32  gameloop_c;
 bool    GAMERUN;
 palette MAINPALETTE;
-
+inputstate INPUT_STATE;
+inputstate INPUTSTATE_OLD;
 int MOUSEPOS_X, MOUSEPOS_Y;
 
 // Global functions prototype
@@ -69,6 +70,8 @@ void init()
 	glMatrixMode(GL_MODELVIEW);
 	
 	glClearColorM(COLOR_CORNFLOWERBLUE);
+	input_initstate(&INPUT_STATE);
+	input_initstate(&INPUTSTATE_OLD);
 
 	// Init your game logic here.
 	MOUSEPOS_X = MOUSEPOS_Y = -1;
@@ -88,6 +91,7 @@ void update()
 	while(SDL_PollEvent(&event))
 	{
 		// Redistribute input events
+		input_copystate(&INPUTSTATE_OLD, INPUT_STATE);
 		switch(event.type)
 		{
 		case SDL_QUIT:
@@ -124,12 +128,25 @@ void handleKeyboard(KeyboardKey key, bool isPressed)
 		quit();
 		break;
 	case SDLK_UP:
+		INPUT_STATE.hat.y = (isPressed ? -1 : 0);
 		break;
 	case SDLK_DOWN:
+		INPUT_STATE.hat.y = (isPressed ? 1 : 0);
 		break;
 	case SDLK_LEFT:
+		INPUT_STATE.hat.x = (isPressed ? -1 : 0);
 		break;
 	case SDLK_RIGHT:
+		INPUT_STATE.hat.x = (isPressed ? 1 : 0);
+		break;
+	case SDLK_z:
+		INPUT_STATE.a = isPressed;
+		break;
+	case SDLK_x:
+		INPUT_STATE.b = isPressed;
+		break;
+	case SDLK_c:
+		INPUT_STATE.c = isPressed;
 		break;
 	default:
 		break;
@@ -138,14 +155,17 @@ void handleKeyboard(KeyboardKey key, bool isPressed)
 
 void handleMouseClick(int X, int Y, MouseButton button, bool isPressed)
 {
-	// TODO: Edit this accordingly
+	MOUSEPOS_X = X; MOUSEPOS_Y = Y;
 	switch(button)
 	{
 	case SDL_BUTTON_LEFT:
+		INPUT_STATE.mouse_left = isPressed;
 		break;
 	case SDL_BUTTON_RIGHT:
+		INPUT_STATE.mouse_right = isPressed;
 		break;
 	case SDL_BUTTON_MIDDLE:
+		INPUT_STATE.mouse_middle = isPressed;
 		break;
 	}
 }

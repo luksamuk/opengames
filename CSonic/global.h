@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "types.h"
+#include "input.h"
 #include "palette.h"
 #include "level.h"
 
@@ -20,6 +21,11 @@ extern void quit();
 
 // External definition for the main palette
 extern palette MAINPALETTE;
+
+// External definition for the main Input States
+extern inputstate INPUT_STATE;
+extern inputstate INPUTSTATE_OLD;
+extern int MOUSEPOS_X, MOUSEPOS_Y;
 
 // Sets OpenGL to use a color from the palette as
 // clear color
