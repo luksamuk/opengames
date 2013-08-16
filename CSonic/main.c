@@ -10,6 +10,8 @@ inputstate INPUT_STATE;
 inputstate INPUTSTATE_OLD;
 int MOUSEPOS_X, MOUSEPOS_Y;
 
+vec2 postest;
+
 // Global functions prototype
 void renderpalette(palette*);
 
@@ -75,6 +77,8 @@ void init()
 
 	// Init your game logic here.
 	MOUSEPOS_X = MOUSEPOS_Y = -1;
+
+	postest.x = postest.y = 0x00000000;
 }
 
 void load()
@@ -87,7 +91,6 @@ void load()
 void update()
 {
 	SDL_Event event;
-
 	while(SDL_PollEvent(&event))
 	{
 		// Redistribute input events
@@ -117,6 +120,17 @@ void update()
 			break;
 		}
 	}
+
+	// Position testing!
+	if(input_ispressing(&INPUT_STATE, BUTTON_RIGHT))
+		postest.x++;
+	if(input_ispressing(&INPUT_STATE, BUTTON_LEFT))
+		postest.x--;
+
+	if(input_ispressing(&INPUT_STATE, BUTTON_UP))
+		postest.y++;
+	if(input_ispressing(&INPUT_STATE, BUTTON_DOWN))
+		postest.y--;
 }
 
 void handleKeyboard(KeyboardKey key, bool isPressed)
@@ -199,6 +213,10 @@ void draw()
 	// Render your game here.
 
 	renderpalette(&MAINPALETTE);
+	char str[255];
+	sprintf(str, "0x%08X\n0x%08X\n%dx%d", postest.x, postest.y, postest.x, postest.y);
+	glColorM(COLOR_WHITE);
+	renderBitmapString(5.0f, WIN_HEIGHT - 24, str);
 }
 
 void renderpalette(palette* pal)
@@ -254,7 +272,7 @@ void renderpalette(palette* pal)
 		int i = MOUSEPOS_X / colorpsize;
 		sprintf(output, "%03d -> 0x%04X", i, SHADOWCOLOR(MAINPALETTE.data[i]));
 
-		glColorM(COLOR_WHITE);
+		glColorM(COLOR_BLACK);
 		renderBitmapString(5.0f, (colorpsize * 75) + 10.0f, output);
 	}
 }
