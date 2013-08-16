@@ -23,6 +23,7 @@ typedef enum INPUTBUTTON
 typedef struct INPUTSTATE_DEF
 {
 	vec2_b hat;
+	vec2 mousepos;
 
 	byte a;
 	byte b;

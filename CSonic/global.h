@@ -25,7 +25,6 @@ extern palette MAINPALETTE;
 // External definition for the main Input States
 extern inputstate INPUT_STATE;
 extern inputstate INPUTSTATE_OLD;
-extern int MOUSEPOS_X, MOUSEPOS_Y;
 
 // Sets OpenGL to use a color from the palette as
 // clear color
