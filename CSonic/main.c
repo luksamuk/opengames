@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "global.h"
 
 // Global variables.
