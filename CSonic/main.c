@@ -1,4 +1,5 @@
 #include "global.h"
+#include "level.h"
 
 // Global variables.
 // references on global.h
