@@ -80,4 +80,14 @@ color getcolor(palette*, int);
 // Prints color info on console
 void  dumpcolor(color);
 
+
+/* USEFUL GLOBAL FUNCTIONS */
+
+// Sets OpenGL to use a color from the palette as
+// clear color
+void glClearColorM(color);
+
+// Sets OpenGL to render a color from the palette
+void glColorM(color);
+
 #endif // PALETTE_H

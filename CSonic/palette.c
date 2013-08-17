@@ -107,3 +107,18 @@ void dumpcolor(color c)
 {
 	printf("0x%04X -> %d\n", c, c);
 }
+
+void glClearColorM(color c)
+{
+	glClearColor(MASKTOFLOAT(GETRCOLOR(c)),
+		         MASKTOFLOAT(GETGCOLOR(c)),
+		         MASKTOFLOAT(GETBCOLOR(c)),
+		         1.0f);
+}
+
+void glColorM(color c)
+{
+	glColor3b(MASKTOBYTE(GETRCOLOR(c)),
+			  MASKTOBYTE(GETGCOLOR(c)),
+			  MASKTOBYTE(GETBCOLOR(c)));
+}

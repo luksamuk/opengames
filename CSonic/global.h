@@ -85,29 +85,4 @@ extern palette MAINPALETTE;
 extern inputstate INPUT_STATE;
 extern inputstate INPUTSTATE_OLD;
 
-
-
-
-
-
-/* USEFUL GLOBAL FUNCTIONS */
-
-// Sets OpenGL to use a color from the palette as
-// clear color
-void glClearColorM(color c)
-{
-	glClearColor(MASKTOFLOAT(GETRCOLOR(c)),
-		         MASKTOFLOAT(GETGCOLOR(c)),
-		         MASKTOFLOAT(GETBCOLOR(c)),
-		         1.0f);
-}
-
-// Sets OpenGL to render a color from the palette
-void glColorM(color c)
-{
-	glColor3b(MASKTOBYTE(GETRCOLOR(c)),
-			  MASKTOBYTE(GETGCOLOR(c)),
-			  MASKTOBYTE(GETBCOLOR(c)));
-}
-
 #endif

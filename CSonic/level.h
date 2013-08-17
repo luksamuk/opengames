@@ -5,19 +5,19 @@
 
 typedef struct TILE_8X8
 {
-	color colors[8][8] = {0};
+	color colors[8][8];
 } tile8;
 
 typedef struct TILE_16X16
 {
-	byte tiles[2][2]   = {0};
+	byte tiles[2][2];
 	// TODO:
 	// Collision
 } tile16;
 
 typedef struct TILE_128X128
 {
-	byte pieces[8][8]  = {0};
+	byte pieces[8][8];
 } tile128;
 
 typedef struct LEVELDEF
