@@ -5,11 +5,11 @@
 // references on global.h
 Uint32  gameloop_c;
 bool    GAMERUN;
+SDL_Surface* surface;
 palette MAINPALETTE;
 inputstate INPUT_STATE;
 inputstate INPUTSTATE_OLD;
 
-vec2 postest;
 bool displaypalette = false;
 
 // Global functions prototype
@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_WM_SetCaption(GAMENAME, NULL);
 	SDL_WM_SetIcon(SDL_LoadBMP(GAMEICON), NULL);
-	SDL_SetVideoMode(WIN_WIDTH, WIN_HEIGHT, 8, SDL_OPENGL);
+	surface = SDL_SetVideoMode(WIN_WIDTH, WIN_HEIGHT, 8, SDL_OPENGL);
 
 	// Initialize game and load resources
 	init();
@@ -81,8 +81,6 @@ void init()
 	input_initstate(&INPUTSTATE_OLD);
 
 	// TODO: Init your game logic here.
-
-	postest.x = postest.y = 0x00000000;
 }
 
 void load()
@@ -111,17 +109,7 @@ void update()
 
 	/* TESTS! */
 
-	// Position testing!
-	if(input_ispressing(&INPUT_STATE, BUTTON_RIGHT))
-		postest.x++;
-	if(input_ispressing(&INPUT_STATE, BUTTON_LEFT))
-		postest.x--;
-
-	if(input_ispressing(&INPUT_STATE, BUTTON_UP))
-		postest.y++;
-	if(input_ispressing(&INPUT_STATE, BUTTON_DOWN))
-		postest.y--;
-
+	// Palette test display
 	if(input_haspressed(&INPUT_STATE, &INPUTSTATE_OLD, BUTTON_A))
 		displaypalette = !displaypalette;
 }
@@ -139,23 +127,15 @@ void draw()
 	if(displaypalette)
 		renderpalette(&MAINPALETTE);
 
-	char str[255];
-
-	// Render test position
-	sprintf(str, "0x%08X\n0x%08X\n%ux%u",
-		postest.x, postest.y,
-		postest.x, postest.y);
-	glColorM(COLOR_WHITE);
-	renderBitmapString(5.0f, WIN_HEIGHT - 65, str);
-
 	// Render mousepos
-	sprintf(str, "0x%08X\n0x%08X\n%ux%u",
+	char str[255];
+	sprintf(str, "0x%08X\n0x%08X\n",
 		INPUT_STATE.mousepos.x,
 		INPUT_STATE.mousepos.y,
 		INPUT_STATE.mousepos.x,
 		INPUT_STATE.mousepos.y);
 	glColorM(COLOR_WHITE);
-	renderBitmapString(5.0f, WIN_HEIGHT - 29, str);
+	renderBitmapString(5.0f, WIN_HEIGHT - 28, str);
 
 }
 
