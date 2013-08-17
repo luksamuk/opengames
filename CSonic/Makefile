@@ -25,7 +25,7 @@ else
 
 	ICONPATH = resources/icon.bmp
 	ENDICONPATH = build/resources/icon.bmp
-	COPYSDL = echo "Unecessary to copy SDL dlls."
+	COPYSDL = echo "NOTE: Copy of SDL.dll is unecessary, jumping step."
 
 	APPNAME = build/csonic
 endif
@@ -36,18 +36,24 @@ BUILDDIR = build
 CFLAGS = -W -Wall -O3 -g
 
 all: mkdirs
+	@echo "> Compiling files...\n"
 	gcc -o $(APPNAME) input.c palette.c level.c main.c $(LINKS) $(CFLAGS)
-	$(COPY) $(ICONPATH) $(ENDICONPATH)
-	$(COPYSDL)
+	@echo "\n> Copying resources...\n"
+	@$(COPY) $(ICONPATH) $(ENDICONPATH)
+	@$(COPYSDL)
+	@echo "Done.\n"
 
 clean:
-	$(REMOVE) *.o
+	@echo "> Removing object files..."
+	@$(REMOVE) *.o
 
 mkdirs:
-	$(MAKEDIR) $(BUILDDIR)
-	cd $(BUILDDIR)
-	$(MAKEDIR) $(RESOURCESDIR)
-	$(MAKEDIR) $(DATADIR)
+	@echo "\n> Creating resource directories...\n"
+	@$(MAKEDIR) $(BUILDDIR)
+	@cd $(BUILDDIR)
+	@$(MAKEDIR) $(RESOURCESDIR)
+	@$(MAKEDIR) $(DATADIR)
 
 delete: clean
-	$(DELDIR) $(BUILDDIR)
+	@echo "> Deleting build directory..."
+	@$(DELDIR) $(BUILDDIR)

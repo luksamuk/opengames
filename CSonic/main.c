@@ -238,10 +238,10 @@ void renderBitmapString(float x, float y, char *string)
     {
         if((*c) == '\n')
         {
-            y += 12;
+            y += 18;
             glRasterPos2f(x, y);
         }
-        else glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
+        else glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
     }
 }
 
@@ -296,7 +296,7 @@ void renderpalette(palette* pal)
 	if(INPUT_STATE.mousepos.y <= colorpsize * 75)
 	{
 		int i = INPUT_STATE.mousepos.x / colorpsize;
-		sprintf(output, "%03u -> 0x%04X", i, SHADOWCOLOR(MAINPALETTE.data[i]));
+		sprintf(output, "%03u -> 0x%04X", i, MAINPALETTE.data[i]);
 
 		glColorM(COLOR_BLACK);
 		renderBitmapString(5.0f, (colorpsize * 75) + 10.0f, output);

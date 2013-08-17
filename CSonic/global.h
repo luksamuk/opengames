@@ -29,12 +29,12 @@
 //#define WIN_HEIGHT 0x0F0
 
 /* 640x480 - double size */
-//#define WIN_WIDTH    0x280
-//#define WIN_HEIGHT   0x1E0
+#define WIN_WIDTH    0x280
+#define WIN_HEIGHT   0x1E0
 
 /* 960x720 - triple size */
-#define WIN_WIDTH    0x3C0
-#define WIN_HEIGHT   0x2D0
+//#define WIN_WIDTH    0x3C0
+//#define WIN_HEIGHT   0x2D0
 
 
 
