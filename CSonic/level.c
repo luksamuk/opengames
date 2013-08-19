@@ -33,9 +33,9 @@ void level_rendertile(level* lvl, byte tile, vec2 pos)
 		{
 
 			pox = DRAWADJUST_x(DWORDTOFLOAT(pos.x + i));
-			px  = pox + DRAWADJUST_x(8);
+			px  = pox + DRAWADJUST_x(1);
 			poy = DRAWADJUST_y(DWORDTOFLOAT(pos.y + j));
-			py  = poy + DRAWADJUST_y(8);
+			py  = poy + DRAWADJUST_y(1);
 
 			glColorM(lvl->tiles[tile].colors[i][j]);
 			glBegin(GL_QUADS);
@@ -54,8 +54,8 @@ void level_renderpiece(level* lvl, byte piece, vec2 pos)
 		for(j = 0; j < 2; j++)
 		{
 			vec2 tilepos;
-			tilepos.x = pos.x + ((16 / 2) * i);
-			tilepos.y = pos.y + ((16 / 2) * j);
+			tilepos.x = pos.x + (8 * i);
+			tilepos.y = pos.y + (8 * j);
 			level_rendertile(lvl,
 				             lvl->pieces[piece].tiles[i][j],
 				             tilepos);
@@ -69,8 +69,8 @@ void level_renderchunk(level* lvl, byte chunk, vec2 pos)
 		for(j = 0; j < 8; j++)
 		{
 			vec2 piecepos;
-			piecepos.x = pos.x + ((128 / 8) * i);
-			piecepos.y = pos.y + ((128 / 8) * j);
+			piecepos.x = pos.x + (16 * i);
+			piecepos.y = pos.y + (16 * j);
 			level_renderpiece(lvl,
 				              lvl->chunks[chunk].pieces[i][j],
 				              piecepos);
