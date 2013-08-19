@@ -37,7 +37,7 @@ CFLAGS = -W -Wall -O3 -g
 
 all: mkdirs
 	@echo "> Compiling files...\n"
-	gcc -o $(APPNAME) input.c palette.c level.c main.c $(LINKS) $(CFLAGS)
+	gcc -o $(APPNAME) vec2.c input.c palette.c level.c main.c $(LINKS) $(CFLAGS)
 	@echo "\n> Copying resources...\n"
 	@$(COPY) $(ICONPATH) $(ENDICONPATH)
 	@$(COPYSDL)

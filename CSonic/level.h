@@ -25,7 +25,7 @@ typedef struct LEVELDEF
 	tile8      tiles  [255];
 	tile16     pieces [255];
 	tile128    chunks [255];
-	byte**     mapping;
+	byte       mapping[255][255];
 	word       levelsize_x;
 	word       levelsize_y;
 	// TODO:
@@ -34,11 +34,12 @@ typedef struct LEVELDEF
 	// Level events
 } level;
 
+float DWORDTOFLOAT(dword);
 void level_init(level*);
 void level_load(level*);
-void level_rendertile(byte);
-void level_renderpiece(byte);
-void level_renderchunk(byte);
+void level_rendertile(level*, byte, vec2);
+void level_renderpiece(level*, byte, vec2);
+void level_renderchunk(level*, byte, vec2);
 void level_renderlevel(level*);
 
 #endif

@@ -13,4 +13,6 @@ typedef struct VEC2_B_DEF
 	int x, y;
 } vec2_b;
 
+vec2 new_vec2(dword, dword);
+
 #endif // VEC2_H

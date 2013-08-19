@@ -72,11 +72,12 @@ void gpalette_load(palette* p)
 void palette_load(palette* p, const char* filename)
 {
 	FILE* file;
+	size_t result;
 	file = fopen(filename, "rb");
 	if(!file) return;
 
-	fread(&p->numcolors, sizeof(int), 1, file);
-	fread(p->data, sizeof(color), p->numcolors, file);
+	result = fread(&p->numcolors, sizeof(int), 1, file);
+	result = fread(p->data, sizeof(color), p->numcolors, file);
 
 	fclose(file);
 }

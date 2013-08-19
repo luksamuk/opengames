@@ -130,7 +130,7 @@ void draw()
 	// Render mousepos
 	char str[255];
 	sprintf(str, "0x%08X\n0x%08X\n",
-		INPUT_STATE.mousepos.x,
+		INPUT_STATE.mousepos.x,,
 		INPUT_STATE.mousepos.y);
 	glColorM(COLOR_WHITE);
 	renderBitmapString(5.0f, WIN_HEIGHT - 28, str);

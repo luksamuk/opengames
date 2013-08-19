@@ -53,10 +53,10 @@
  * and assume a screen always 320x240. */
 
 // Draw adjusting for X coordinate
-#define DRAWADJUST_X(x) (x * (WIN_WIDTH / 0x140))
+#define DRAWADJUST_x(n) (n * (WIN_WIDTH / 0x140))
 
 // Draw adjusting for Y coordinate
-#define DRAWADJUST_Y(y) (y * (WIN_HEIGHT / 0x0F0))
+#define DRAWADJUST_y(n) (n * (WIN_HEIGHT / 0x0F0))
 
 
 
