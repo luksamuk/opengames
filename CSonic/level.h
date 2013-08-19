@@ -25,18 +25,20 @@ typedef struct LEVELDEF
 	tile8      tiles  [255];
 	tile16     pieces [255];
 	tile128    chunks [255];
-	word       levelsize_X;
-	word       levelsize_Y;
+	byte**     mapping;
+	word       levelsize_x;
+	word       levelsize_y;
 	// TODO:
 	// Object mapping
 	// Object placement
 	// Level events
 } level;
 
+void level_init(level*);
 void level_load(level*);
-void level_rendertile(tile8*);
-void level_renderpiece(tile16*);
-void level_renderchunk(tile128*);
+void level_rendertile(byte);
+void level_renderpiece(byte);
+void level_renderchunk(byte);
 void level_renderlevel(level*);
 
 #endif
