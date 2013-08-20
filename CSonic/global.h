@@ -22,6 +22,8 @@
 /* SCREEN DEFINITIONS */
 
 // Size
+extern word WIN_WIDTH, WIN_HEIGHT;
+
 
 /* 320x240 - single size */
 //#define WIN_WIDTH  0x140
@@ -32,8 +34,8 @@
 //#define WIN_HEIGHT   0x1E0
 
 /* 960x720 - triple size */
-#define WIN_WIDTH    0x3C0
-#define WIN_HEIGHT   0x2D0
+//#define WIN_WIDTH    0x3C0
+//#define WIN_HEIGHT   0x2D0
 
 
 

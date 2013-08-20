@@ -3,6 +3,8 @@
 
 // Global variables.
 // references on global.h
+word WIN_WIDTH, WIN_HEIGHT;
+
 Uint32  gameloop_c;
 bool    GAMERUN;
 SDL_Surface* surface;
@@ -32,12 +34,63 @@ void renderBitmapString(float, float, char*);
 // Main function
 int main(int argc, char** argv)
 {
+	// Gets buffer size
+	WIN_WIDTH  = 0x140;
+	WIN_HEIGHT = 0x0F0;
+	bool fullscreen = false;
+	if(argc > 1)
+	{
+		int i;
+		bool rndrm_ch = false;
+		for(i = 1; i < argc; i++)
+		{
+			// Double render (640x480)
+			if(!strcmp(argv[i], "-r2") && !rndrm_ch)
+			{
+				WIN_WIDTH  = 0x280;
+				WIN_HEIGHT = 0x1E0;
+				rndrm_ch = true;
+			}
+			// Triple render (960x720)
+			else if(!strcmp(argv[i], "-r3") && !rndrm_ch)
+			{
+				WIN_WIDTH  = 0x3C0;
+				WIN_HEIGHT = 0x2D0;
+				rndrm_ch = true;
+			}
+			// Four-times render (1280x960)
+			else if(!strcmp(argv[i], "-r4") && !rndrm_ch)
+			{
+				WIN_WIDTH  = 0x0500;
+				WIN_HEIGHT = 0x03C0;
+				rndrm_ch = true;
+			}
+			// HD 720p render (1280x720)
+			else if(!strcmp(argv[i], "-r720p") && !rndrm_ch)
+			{
+				WIN_WIDTH  = 0x0500;
+				WIN_HEIGHT = 0x02D0;
+				rndrm_ch = true;
+			}
+			// HD 1080p render (1920x1080)
+			else if(!strcmp(argv[i], "-r1080p") && !rndrm_ch)
+			{
+				WIN_WIDTH  = 0x0780;
+				WIN_HEIGHT = 0x0438;
+				rndrm_ch = true;
+			}
+			// Fullscreen
+			else if(!strcmp(argv[i], "-full"))
+				fullscreen = true;
+		}
+	}
+	Uint32 flags = (fullscreen ? SDL_OPENGL | SDL_FULLSCREEN : SDL_OPENGL);
 	//Initialize SDL
 	glutInit(&argc, argv);
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_WM_SetCaption(GAMENAME, NULL);
 	SDL_WM_SetIcon(SDL_LoadBMP(GAMEICON), NULL);
-	surface = SDL_SetVideoMode(WIN_WIDTH, WIN_HEIGHT, 8, SDL_OPENGL);
+	surface = SDL_SetVideoMode(WIN_WIDTH, WIN_HEIGHT, 8, flags);
 
 	// Initialize game and load resources
 	init();
@@ -94,6 +147,7 @@ void load()
 	gpalette_load(&MAINPALETTE);
 
 	// TODO: Load all your resources here.
+	level_createtest(&tstlvl);
 }
 
 void unload()

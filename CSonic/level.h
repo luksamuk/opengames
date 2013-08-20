@@ -44,4 +44,7 @@ void level_renderpiece(level*, byte, vec2);
 void level_renderchunk(level*, byte, vec2);
 void level_renderlevel(level*, vec2);
 
+// Creates a test level out of code.
+void level_createtest(level*);
+
 #endif

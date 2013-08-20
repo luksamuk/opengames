@@ -28,111 +28,6 @@ void level_init(level* lvl)
 	for(i = 0x00; i < 0xFF; i += 0x01)
 		for(j = 0x00; i < 0xFF; i += 0x01)
 			lvl->mapping[i][j] = 0x00;
-
-	// TEST!
-	tile8 t;
-	tile16 p;
-	tile128 c;
-
-	t.colors[0][0] = t.colors[1][0] = COLOR_GREEN;
-	t.colors[0][1] = t.colors[1][1] = COLOR_GREEN;
-	t.colors[0][2] = t.colors[1][2] = COLOR_GREEN;
-	t.colors[0][3] = t.colors[1][3] = COLOR_GREEN;
-	t.colors[0][4] = t.colors[1][4] = COLOR_GREEN;
-	t.colors[0][5] = t.colors[1][5] = COLOR_GREEN;
-	t.colors[0][6] = t.colors[1][6] = COLOR_GREEN;
-	t.colors[0][7] = t.colors[1][7] = COLOR_GREEN;
-
-	t.colors[2][0] = t.colors[3][0] = COLOR_TRANSPARENT;
-	t.colors[2][1] = t.colors[3][1] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[2][2] = t.colors[3][2] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[2][3] = t.colors[3][3] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[2][4] = t.colors[3][4] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[2][5] = t.colors[3][5] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[2][6] = t.colors[3][6] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[2][7] = t.colors[3][7] = SHADOWCOLOR(COLOR_GREEN);
-
-	t.colors[4][0] = t.colors[5][0] = COLOR_TRANSPARENT;
-	t.colors[4][1] = t.colors[5][1] = COLOR_TRANSPARENT;
-	t.colors[4][2] = t.colors[5][2] = COLOR_GREEN;
-	t.colors[4][3] = t.colors[5][3] = COLOR_GREEN;
-	t.colors[4][4] = t.colors[5][4] = COLOR_GREEN;
-	t.colors[4][5] = t.colors[5][5] = COLOR_GREEN;
-	t.colors[4][6] = t.colors[5][6] = COLOR_GREEN;
-	t.colors[4][7] = t.colors[5][7] = COLOR_GREEN;
-
-	t.colors[6][0] = t.colors[7][0] = COLOR_TRANSPARENT;
-	t.colors[6][1] = t.colors[7][1] = COLOR_TRANSPARENT;
-	t.colors[6][2] = t.colors[7][2] = COLOR_TRANSPARENT;
-	t.colors[6][3] = t.colors[7][3] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[6][4] = t.colors[7][4] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[6][5] = t.colors[7][5] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[6][6] = t.colors[7][6] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[6][7] = t.colors[7][7] = SHADOWCOLOR(COLOR_GREEN);
-
-	lvl->tiles[1] = t;
-
-	t.colors[0][0] = t.colors[1][0] = COLOR_TRANSPARENT;
-	t.colors[0][1] = t.colors[1][1] = COLOR_TRANSPARENT;
-	t.colors[0][2] = t.colors[1][2] = COLOR_TRANSPARENT;
-	t.colors[0][3] = t.colors[1][3] = COLOR_GREEN;
-	t.colors[0][4] = t.colors[1][4] = COLOR_GREEN;
-	t.colors[0][5] = t.colors[1][5] = COLOR_GREEN;
-	t.colors[0][6] = t.colors[1][6] = COLOR_GREEN;
-	t.colors[0][7] = t.colors[1][7] = COLOR_GREEN;
-
-	t.colors[2][0] = t.colors[3][0] = COLOR_TRANSPARENT;
-	t.colors[2][1] = t.colors[3][1] = COLOR_TRANSPARENT;
-	t.colors[2][2] = t.colors[3][2] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[2][3] = t.colors[3][3] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[2][4] = t.colors[3][4] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[2][5] = t.colors[3][5] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[2][6] = t.colors[3][6] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[2][7] = t.colors[3][7] = SHADOWCOLOR(COLOR_GREEN);
-
-	t.colors[4][0] = t.colors[5][0] = COLOR_TRANSPARENT;
-	t.colors[4][1] = t.colors[5][1] = COLOR_GREEN;
-	t.colors[4][2] = t.colors[5][2] = COLOR_GREEN;
-	t.colors[4][3] = t.colors[5][3] = COLOR_GREEN;
-	t.colors[4][4] = t.colors[5][4] = COLOR_GREEN;
-	t.colors[4][5] = t.colors[5][5] = COLOR_GREEN;
-	t.colors[4][6] = t.colors[5][6] = COLOR_GREEN;
-	t.colors[4][7] = t.colors[5][7] = COLOR_GREEN;
-
-	t.colors[6][0] = t.colors[7][0] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[6][1] = t.colors[7][1] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[6][2] = t.colors[7][2] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[6][3] = t.colors[7][3] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[6][4] = t.colors[7][4] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[6][5] = t.colors[7][5] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[6][6] = t.colors[7][6] = SHADOWCOLOR(COLOR_GREEN);
-	t.colors[6][7] = t.colors[7][7] = SHADOWCOLOR(COLOR_GREEN);
-
-	lvl->tiles[2] = t;
-
-	for(i = 0; i < 8; i++)
-		for(j = 0; j < 8; j++)
-			t.colors[i][j] = 0x0AA2;
-	lvl->tiles[3] = t;
-	for(i = 0; i < 8; i++)
-		for(j = 0; j < 8; j++)
-			t.colors[i][j] = SHADOWCOLOR(0x0AA2);
-	lvl->tiles[4] = t;
-
-	p.tiles[0][0] = 0; p.tiles[1][0] = 0;
-	p.tiles[0][1] = 1; p.tiles[1][1] = 2;
-	lvl->pieces[1] = p;
-	p.tiles[0][0] = 3; p.tiles[1][0] = 4;
-	p.tiles[0][1] = 4; p.tiles[1][1] = 3;
-	lvl->pieces[2] = p;
-
-	for(i = 0; i < 8; i++)
-		for(j = 0; j < 8; j++)
-			if(!j) c.pieces[i][j] = 1;
-			else c.pieces[i][j] = 2;
-
-	lvl->chunks[1] = c;
-	lvl->mapping[0][0] = lvl->mapping[1][1] = lvl->mapping[2][0] = 1;
 }
 
 void level_load(level* lvl)
@@ -228,4 +123,169 @@ void level_renderlevel(level* lvl, vec2 camerapos)
 				              new_vec2(i * 128, j * 128));
 		}
 
+}
+
+void level_createtest(level* lvl)
+{
+	word i, j;
+	tile8 t;
+	tile16 p;
+	tile128 c;
+
+	// Grass 1
+	t.colors[0][0] = t.colors[1][0] = COLOR_GREEN;
+	t.colors[0][1] = t.colors[1][1] = COLOR_GREEN;
+	t.colors[0][2] = t.colors[1][2] = COLOR_GREEN;
+	t.colors[0][3] = t.colors[1][3] = COLOR_GREEN;
+	t.colors[0][4] = t.colors[1][4] = COLOR_GREEN;
+	t.colors[0][5] = t.colors[1][5] = COLOR_GREEN;
+	t.colors[0][6] = t.colors[1][6] = COLOR_GREEN;
+	t.colors[0][7] = t.colors[1][7] = COLOR_GREEN;
+
+	t.colors[2][0] = t.colors[3][0] = COLOR_TRANSPARENT;
+	t.colors[2][1] = t.colors[3][1] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[2][2] = t.colors[3][2] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[2][3] = t.colors[3][3] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[2][4] = t.colors[3][4] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[2][5] = t.colors[3][5] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[2][6] = t.colors[3][6] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[2][7] = t.colors[3][7] = SHADOWCOLOR(COLOR_GREEN);
+
+	t.colors[4][0] = t.colors[5][0] = COLOR_TRANSPARENT;
+	t.colors[4][1] = t.colors[5][1] = COLOR_TRANSPARENT;
+	t.colors[4][2] = t.colors[5][2] = COLOR_GREEN;
+	t.colors[4][3] = t.colors[5][3] = COLOR_GREEN;
+	t.colors[4][4] = t.colors[5][4] = COLOR_GREEN;
+	t.colors[4][5] = t.colors[5][5] = COLOR_GREEN;
+	t.colors[4][6] = t.colors[5][6] = COLOR_GREEN;
+	t.colors[4][7] = t.colors[5][7] = COLOR_GREEN;
+
+	t.colors[6][0] = t.colors[7][0] = COLOR_TRANSPARENT;
+	t.colors[6][1] = t.colors[7][1] = COLOR_TRANSPARENT;
+	t.colors[6][2] = t.colors[7][2] = COLOR_TRANSPARENT;
+	t.colors[6][3] = t.colors[7][3] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[6][4] = t.colors[7][4] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[6][5] = t.colors[7][5] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[6][6] = t.colors[7][6] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[6][7] = t.colors[7][7] = SHADOWCOLOR(COLOR_GREEN);
+
+	lvl->tiles[2] = t;
+
+	// Grass 2
+	t.colors[0][0] = t.colors[1][0] = COLOR_TRANSPARENT;
+	t.colors[0][1] = t.colors[1][1] = COLOR_TRANSPARENT;
+	t.colors[0][2] = t.colors[1][2] = COLOR_TRANSPARENT;
+	t.colors[0][3] = t.colors[1][3] = COLOR_GREEN;
+	t.colors[0][4] = t.colors[1][4] = COLOR_GREEN;
+	t.colors[0][5] = t.colors[1][5] = COLOR_GREEN;
+	t.colors[0][6] = t.colors[1][6] = COLOR_GREEN;
+	t.colors[0][7] = t.colors[1][7] = COLOR_GREEN;
+
+	t.colors[2][0] = t.colors[3][0] = COLOR_TRANSPARENT;
+	t.colors[2][1] = t.colors[3][1] = COLOR_TRANSPARENT;
+	t.colors[2][2] = t.colors[3][2] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[2][3] = t.colors[3][3] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[2][4] = t.colors[3][4] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[2][5] = t.colors[3][5] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[2][6] = t.colors[3][6] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[2][7] = t.colors[3][7] = SHADOWCOLOR(COLOR_GREEN);
+
+	t.colors[4][0] = t.colors[5][0] = COLOR_TRANSPARENT;
+	t.colors[4][1] = t.colors[5][1] = COLOR_GREEN;
+	t.colors[4][2] = t.colors[5][2] = COLOR_GREEN;
+	t.colors[4][3] = t.colors[5][3] = COLOR_GREEN;
+	t.colors[4][4] = t.colors[5][4] = COLOR_GREEN;
+	t.colors[4][5] = t.colors[5][5] = COLOR_GREEN;
+	t.colors[4][6] = t.colors[5][6] = COLOR_GREEN;
+	t.colors[4][7] = t.colors[5][7] = COLOR_GREEN;
+
+	t.colors[6][0] = t.colors[7][0] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[6][1] = t.colors[7][1] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[6][2] = t.colors[7][2] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[6][3] = t.colors[7][3] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[6][4] = t.colors[7][4] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[6][5] = t.colors[7][5] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[6][6] = t.colors[7][6] = SHADOWCOLOR(COLOR_GREEN);
+	t.colors[6][7] = t.colors[7][7] = SHADOWCOLOR(COLOR_GREEN);
+
+	lvl->tiles[1] = t;
+
+	// Dirt 1
+	for(i = 0; i < 8; i++)
+		for(j = 0; j < 8; j++)
+			t.colors[i][j] = 0x0AA2;
+	lvl->tiles[3] = t;
+
+	// Dirt 2
+	for(i = 0; i < 8; i++)
+		for(j = 0; j < 8; j++)
+			t.colors[i][j] = SHADOWCOLOR(0x0AA2);
+	lvl->tiles[4] = t;
+
+	// Dirt and grass 1
+	for(i = 0; i < 8; i++)
+		for(j = 0; j < 8; j++)
+			t.colors[i][j] = SHADOWCOLOR(0x0AA2);
+	// Grass
+	for(i = 0; i < 4; i++)
+		t.colors[0][i] = t.colors[1][i] = 0x0082;
+	for(i = 0; i < 3; i++)
+		t.colors[2][i] = t.colors[3][i] = SHADOWCOLOR(0x00C4);
+	for(i = 0; i < 2; i++)
+		t.colors[4][i] = t.colors[5][i] = 0x0082;
+	for(i = 0; i < 1; i++)
+		t.colors[6][i] = t.colors[7][i] = SHADOWCOLOR(0x00C4);
+	// Shading
+	t.colors[0][4] = t.colors[1][4] =
+	t.colors[0][5] = t.colors[1][5] =
+	t.colors[2][3] = t.colors[3][3] =
+	t.colors[2][4] = t.colors[3][4] =
+	t.colors[4][2] = t.colors[5][2] =
+	t.colors[4][3] = t.colors[5][3] =
+	t.colors[6][1] = t.colors[7][1] =
+	t.colors[6][2] = t.colors[7][2] = SHADOWCOLOR(0x0042);
+	lvl->tiles[5] = t;
+
+
+	// Dirt and grass 2
+	for(i = 0; i < 8; i++)
+		for(j = 0; j < 8; j++)
+			t.colors[i][j] = 0x0AA2;
+	// Grass
+	for(i = 0; i < 1; i++)
+		t.colors[0][i] = t.colors[1][i] = 0x0082;
+	for(i = 0; i < 2; i++)
+		t.colors[2][i] = t.colors[3][i] = SHADOWCOLOR(0x00C4);
+	for(i = 0; i < 3; i++)
+		t.colors[4][i] = t.colors[5][i] = 0x0082;
+	for(i = 0; i < 4; i++)
+		t.colors[6][i] = t.colors[7][i] = SHADOWCOLOR(0x00C4);
+	// Shading
+	t.colors[0][1] = t.colors[1][1] =
+	t.colors[0][2] = t.colors[1][2] =
+	t.colors[2][2] = t.colors[3][2] =
+	t.colors[2][3] = t.colors[3][3] =
+	t.colors[4][3] = t.colors[5][3] =
+	t.colors[4][4] = t.colors[5][4] =
+	t.colors[6][4] = t.colors[7][4] =
+	t.colors[6][5] = t.colors[7][5] = SHADOWCOLOR(0x0042);
+	lvl->tiles[6] = t;
+
+
+	// Grass
+	p.tiles[0][0] = 1; p.tiles[1][0] = 2;
+	p.tiles[0][1] = 5; p.tiles[1][1] = 6;
+	lvl->pieces[1] = p;
+	// Dirt
+	p.tiles[0][0] = 3; p.tiles[1][0] = 4;
+	p.tiles[0][1] = 4; p.tiles[1][1] = 3;
+	lvl->pieces[2] = p;
+
+	for(i = 0; i < 8; i++)
+		for(j = 0; j < 8; j++)
+			if(!j) c.pieces[i][j] = 1;
+			else c.pieces[i][j] = 2;
+
+	lvl->chunks[1] = c;
+	lvl->mapping[0][1] = lvl->mapping[1][1] = lvl->mapping[2][1] = 1;
 }

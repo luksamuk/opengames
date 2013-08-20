@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 #include <SDL/SDL.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
