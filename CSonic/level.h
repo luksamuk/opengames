@@ -28,6 +28,7 @@ typedef struct LEVELDEF
 	byte       mapping[255][255];
 	word       levelsize_x;
 	word       levelsize_y;
+	vec2       camera;
 	// TODO:
 	// Object mapping
 	// Object placement
@@ -43,6 +44,11 @@ void level_rendertile(level*, byte, vec2);
 void level_renderpiece(level*, byte, vec2);
 void level_renderchunk(level*, byte, vec2);
 void level_renderlevel(level*, vec2);
+
+// Camera settings
+vec2 level_getcamera(level*);
+void level_cameraclamp(level*);
+void level_ortho_camera(level*);
 
 // Creates a test level out of code.
 void level_createtest(level*);

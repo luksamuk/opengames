@@ -14,10 +14,10 @@ inputstate INPUT_STATE;
 inputstate INPUTSTATE_OLD;
 level tstlvl;
 
-bool displaypalette = false;
+bool debug = false;
 
 // Global functions prototype
-void renderpalette(palette*);
+void renderdebug(palette*);
 
 void init();
 void load();
@@ -131,6 +131,7 @@ void init()
 	GAMERUN = true;
 	// Set orthographic view
 	glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
 		glOrtho(0, WIN_WIDTH, WIN_HEIGHT, 0, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
 	// Set clear color
@@ -175,7 +176,17 @@ void update()
 
 	// Palette test display
 	if(input_haspressed(&INPUT_STATE, &INPUTSTATE_OLD, BUTTON_A))
-		displaypalette = !displaypalette;
+		debug = !debug;
+
+	if(input_ispressing(&INPUT_STATE, BUTTON_UP))
+		tstlvl.camera.y += STEPADJUST(5);
+	if(input_ispressing(&INPUT_STATE, BUTTON_DOWN))
+		tstlvl.camera.y -= STEPADJUST(5);
+	if(input_ispressing(&INPUT_STATE, BUTTON_LEFT))
+		tstlvl.camera.x -= STEPADJUST(5);
+	if(input_ispressing(&INPUT_STATE, BUTTON_RIGHT))
+		tstlvl.camera.x += STEPADJUST(5);
+	level_cameraclamp(&tstlvl);
 }
 
 void draw()
@@ -186,20 +197,15 @@ void draw()
 
 	// TODO: Render your game here.
 
+	// Level camera
+	level_ortho_camera(&tstlvl);
+
 	/* TESTS! */
 	// Render a garbaged test level.
 	level_renderlevel(&tstlvl, INPUT_STATE.mousepos);
 	// Render main palette, if active.
-	if(displaypalette)
-		renderpalette(&MAINPALETTE);
-
-	// Render mousepos
-	char str[255];
-	sprintf(str, "0x%08X\n0x%08X\n",
-		INPUT_STATE.mousepos.x,
-		INPUT_STATE.mousepos.y);
-	glColorM(COLOR_WHITE);
-	renderBitmapString(5.0f, WIN_HEIGHT - 28, str);
+	if(debug)
+		renderdebug(&MAINPALETTE);
 
 }
 
@@ -310,13 +316,19 @@ void renderBitmapString(float x, float y, char *string)
     }
 }
 
-void renderpalette(palette* pal)
+void renderdebug(palette* pal)
 {
 	int i;
 	float colorpsize = (float)WIN_WIDTH / (float)pal->numcolors;
 	char* output = malloc(sizeof(char) * 255);
 
 	// Render lines of colors
+	glPushMatrix();
+	glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, WIN_WIDTH, WIN_HEIGHT, 0, -1, 1);
+	glMatrixMode(GL_MODELVIEW);
+
 	for(i = 0; i < pal->numcolors; i++)
 	{
 		float icoord = (float)i * colorpsize;
@@ -366,4 +378,14 @@ void renderpalette(palette* pal)
 		glColorM(COLOR_BLACK);
 		renderBitmapString(5.0f, (colorpsize * 75) + 10.0f, output);
 	}
+
+	// Render camera position
+	char str[255];
+	sprintf(str, "0x%08X\n0x%08X\n",
+		level_getcamera(&tstlvl).x,
+		level_getcamera(&tstlvl).y);
+	glColorM(COLOR_WHITE);
+	renderBitmapString(5.0f, WIN_HEIGHT - 28, str);
+
+	glPopMatrix();
 }

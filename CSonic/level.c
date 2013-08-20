@@ -28,6 +28,9 @@ void level_init(level* lvl)
 	for(i = 0x00; i < 0xFF; i += 0x01)
 		for(j = 0x00; i < 0xFF; i += 0x01)
 			lvl->mapping[i][j] = 0x00;
+	// Reset camera
+	lvl->camera = new_vec2(0x00000080, 0x00000080);
+	level_cameraclamp(lvl);
 }
 
 void level_load(level* lvl)
@@ -123,6 +126,44 @@ void level_renderlevel(level* lvl, vec2 camerapos)
 				              new_vec2(i * 128, j * 128));
 		}
 
+}
+
+vec2 level_getcamera(level* lvl)
+{
+	return new_vec2(DRAWADJUST_x(lvl->camera.x),
+		DRAWADJUST_y(lvl->camera.y));
+}
+
+void level_cameraclamp(level* lvl)
+{
+	if(lvl->camera.x < 0xA0)
+		lvl->camera.x = 0xA0;
+	else if(lvl->camera.x > (lvl->levelsize_x - 0xA0))
+		lvl->camera.x = (lvl->levelsize_x - 0xA0);
+
+	if(lvl->camera.y < 0x78)
+		lvl->camera.y = 0x78;
+	else if(lvl->camera.y > (lvl->levelsize_y - 0x78))
+		lvl->camera.y = (lvl->levelsize_y - 0x78);
+}
+
+void level_ortho_camera(level* lvl)
+{
+	vec2 cam = lvl->camera;
+	cam.x = DRAWADJUST_x(cam.x);
+	cam.y = DRAWADJUST_y(cam.y);
+
+	GLdouble left, right, top, bottom;
+
+	left = cam.x - (WIN_WIDTH / 2);
+	right = cam.x + (WIN_WIDTH / 2);
+	top = cam.y + (WIN_HEIGHT / 2);
+	bottom = cam.y - (WIN_HEIGHT / 2);
+
+	glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(left, right, top, bottom, -1, 1);
+	glMatrixMode(GL_MODELVIEW);
 }
 
 void level_createtest(level* lvl)
