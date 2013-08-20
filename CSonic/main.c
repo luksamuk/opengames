@@ -4,6 +4,7 @@
 // Global variables.
 // references on global.h
 word WIN_WIDTH, WIN_HEIGHT;
+double REFRESHRATE;
 
 Uint32  gameloop_c;
 bool    GAMERUN;
@@ -34,54 +35,58 @@ void renderBitmapString(float, float, char*);
 // Main function
 int main(int argc, char** argv)
 {
-	// Gets buffer size
+	// Gets buffer size and FPS.
 	WIN_WIDTH  = 0x140;
 	WIN_HEIGHT = 0x0F0;
+	REFRESHRATE = 30.0;
+
 	bool fullscreen = false;
 	if(argc > 1)
 	{
 		int i;
-		bool rndrm_ch = false;
 		for(i = 1; i < argc; i++)
 		{
 			// Double render (640x480)
-			if(!strcmp(argv[i], "-r2") && !rndrm_ch)
+			if(!strcmp(argv[i], "-r2"))
 			{
 				WIN_WIDTH  = 0x280;
 				WIN_HEIGHT = 0x1E0;
-				rndrm_ch = true;
 			}
 			// Triple render (960x720)
-			else if(!strcmp(argv[i], "-r3") && !rndrm_ch)
+			else if(!strcmp(argv[i], "-r3"))
 			{
 				WIN_WIDTH  = 0x3C0;
 				WIN_HEIGHT = 0x2D0;
-				rndrm_ch = true;
 			}
 			// Four-times render (1280x960)
-			else if(!strcmp(argv[i], "-r4") && !rndrm_ch)
+			else if(!strcmp(argv[i], "-r4"))
 			{
 				WIN_WIDTH  = 0x0500;
 				WIN_HEIGHT = 0x03C0;
-				rndrm_ch = true;
 			}
 			// HD 720p render (1280x720)
-			else if(!strcmp(argv[i], "-r720p") && !rndrm_ch)
+			else if(!strcmp(argv[i], "-r720p"))
 			{
 				WIN_WIDTH  = 0x0500;
 				WIN_HEIGHT = 0x02D0;
-				rndrm_ch = true;
 			}
 			// HD 1080p render (1920x1080)
-			else if(!strcmp(argv[i], "-r1080p") && !rndrm_ch)
+			else if(!strcmp(argv[i], "-r1080p"))
 			{
 				WIN_WIDTH  = 0x0780;
 				WIN_HEIGHT = 0x0438;
-				rndrm_ch = true;
 			}
 			// Fullscreen
 			else if(!strcmp(argv[i], "-full"))
 				fullscreen = true;
+
+			// Refresh rates
+			else if(!strcmp(argv[i], "-15fps"))
+				REFRESHRATE = 15.0;
+			else if(!strcmp(argv[i], "-20fps"))
+				REFRESHRATE = 20.0;
+			else if(!strcmp(argv[i], "-60fps"))
+				REFRESHRATE = 60.0;
 		}
 	}
 	Uint32 flags = (fullscreen ? SDL_OPENGL | SDL_FULLSCREEN : SDL_OPENGL);

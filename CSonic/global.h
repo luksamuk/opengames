@@ -21,32 +21,16 @@
 
 /* SCREEN DEFINITIONS */
 
-// Size
+// Size.
+// Varies between 1x (default), 2x, 3x, 4x,
+//720p and 1080p, full/windowed.
 extern word WIN_WIDTH, WIN_HEIGHT;
+extern bool fullscreen;
 
 
-/* 320x240 - single size */
-//#define WIN_WIDTH  0x140
-//#define WIN_HEIGHT 0x0F0
-
-/* 640x480 - double size */
-//#define WIN_WIDTH    0x280
-//#define WIN_HEIGHT   0x1E0
-
-/* 960x720 - triple size */
-//#define WIN_WIDTH    0x3C0
-//#define WIN_HEIGHT   0x2D0
-
-
-
-
-// Refresh Rate
-
-/* 30Hz */
-//#define REFRESHRATE 30.0
-/* 60Hz */
-#define REFRESHRATE 60.0
-
+// Refresh Rate.
+// Varies between 15, 20, 30 (default), 60.
+extern double REFRESHRATE;
 
 
 // Operations for ingame setup
