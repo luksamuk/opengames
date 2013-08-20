@@ -43,4 +43,13 @@ Feito em C, utiliza SDL, OpenGL e GLUT.
 Atualmente incluído:
 - Sistema completo de paletas de cores em bitmask;
 - Funções devidas de manipulação de paletas;
-- Função para seleção de cor a partir da paleta, similar ao OpenGL.
+- Função para seleção de cor a partir da paleta, similar ao OpenGL;
+- Sistema de renderização de fases dentro de um certo limite, para evitar sobrecarga;
+- Tiles de teste feitos a partir de código.
+- Suporte a resoluções 1x, 2x, 3x, 4x, 720p, 1080p - fullscreen e windowed;
+- Suporte a 25, 20, 30 e 60 FPS.
+
+A fazer:
+- Escrever câmera;
+- Implementar motion blur;
+- Escrever programa de criação e edição de fases.
