@@ -9,6 +9,7 @@ SDL_Surface* surface;
 palette MAINPALETTE;
 inputstate INPUT_STATE;
 inputstate INPUTSTATE_OLD;
+level tstlvl;
 
 bool displaypalette = false;
 
@@ -81,6 +82,10 @@ void init()
 	input_initstate(&INPUTSTATE_OLD);
 
 	// TODO: Init your game logic here.
+
+	/* TESTS! */
+	// Inits a test level
+	level_init(&tstlvl);
 }
 
 void load()
@@ -123,6 +128,8 @@ void draw()
 	// TODO: Render your game here.
 
 	/* TESTS! */
+	// Render a garbaged test level.
+	level_renderlevel(&tstlvl, INPUT_STATE.mousepos);
 	// Render main palette, if active.
 	if(displaypalette)
 		renderpalette(&MAINPALETTE);
@@ -130,7 +137,7 @@ void draw()
 	// Render mousepos
 	char str[255];
 	sprintf(str, "0x%08X\n0x%08X\n",
-		INPUT_STATE.mousepos.x,,
+		INPUT_STATE.mousepos.x,
 		INPUT_STATE.mousepos.y);
 	glColorM(COLOR_WHITE);
 	renderBitmapString(5.0f, WIN_HEIGHT - 28, str);

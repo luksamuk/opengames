@@ -35,11 +35,13 @@ typedef struct LEVELDEF
 } level;
 
 float DWORDTOFLOAT(dword);
+dword get_pos_relto(dword, dword);
+byte clamptobyte(int, int, int);
 void level_init(level*);
 void level_load(level*);
 void level_rendertile(level*, byte, vec2);
 void level_renderpiece(level*, byte, vec2);
 void level_renderchunk(level*, byte, vec2);
-void level_renderlevel(level*);
+void level_renderlevel(level*, vec2);
 
 #endif
