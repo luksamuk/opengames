@@ -110,14 +110,26 @@ void level_init(level* lvl)
 
 	lvl->tiles[2] = t;
 
+	for(i = 0; i < 8; i++)
+		for(j = 0; j < 8; j++)
+			t.colors[i][j] = 0x0AA2;
+	lvl->tiles[3] = t;
+	for(i = 0; i < 8; i++)
+		for(j = 0; j < 8; j++)
+			t.colors[i][j] = SHADOWCOLOR(0x0AA2);
+	lvl->tiles[4] = t;
+
 	p.tiles[0][0] = 0; p.tiles[1][0] = 0;
 	p.tiles[0][1] = 1; p.tiles[1][1] = 2;
 	lvl->pieces[1] = p;
+	p.tiles[0][0] = 3; p.tiles[1][0] = 4;
+	p.tiles[0][1] = 4; p.tiles[1][1] = 3;
+	lvl->pieces[2] = p;
 
 	for(i = 0; i < 8; i++)
 		for(j = 0; j < 8; j++)
 			if(!j) c.pieces[i][j] = 1;
-			else c.pieces[i][j] = 0;
+			else c.pieces[i][j] = 2;
 
 	lvl->chunks[1] = c;
 	lvl->mapping[0][0] = lvl->mapping[1][1] = lvl->mapping[2][0] = 1;
