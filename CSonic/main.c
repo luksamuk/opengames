@@ -202,7 +202,7 @@ void draw()
 
 	/* TESTS! */
 	// Render a garbaged test level.
-	level_renderlevel(&tstlvl, INPUT_STATE.mousepos);
+	level_renderlevel(&tstlvl);
 	// Render main palette, if active.
 	if(debug)
 		renderdebug(&MAINPALETTE);

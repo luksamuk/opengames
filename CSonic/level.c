@@ -96,14 +96,14 @@ void level_renderchunk(level* lvl, byte chunk, vec2 pos)
 		}
 }
 
-void level_renderlevel(level* lvl, vec2 camerapos)
+void level_renderlevel(level* lvl)
 {
 	dword i, j, Xpos, Ypos;
 	vec2 min, max;
 
 	// Clamp level rendering to character position by hash.
-	Xpos = get_pos_relto(camerapos.x, DRAWADJUST_x(128));
-	Ypos = get_pos_relto(camerapos.y, DRAWADJUST_y(128));
+	Xpos = get_pos_relto(lvl->camera.x, DRAWADJUST_x(128));
+	Ypos = get_pos_relto(lvl->camera.y, DRAWADJUST_y(128));
 	min.x = clamptobyte((int)Xpos - 3,
 		0,
 		get_pos_relto(lvl->levelsize_x, DRAWADJUST_x(128)) + 1);

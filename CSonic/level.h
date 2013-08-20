@@ -43,7 +43,7 @@ void level_load(level*);
 void level_rendertile(level*, byte, vec2);
 void level_renderpiece(level*, byte, vec2);
 void level_renderchunk(level*, byte, vec2);
-void level_renderlevel(level*, vec2);
+void level_renderlevel(level*);
 
 // Camera settings
 vec2 level_getcamera(level*);
