@@ -14,7 +14,7 @@ inputstate INPUT_STATE;
 inputstate INPUTSTATE_OLD;
 level tstlvl;
 
-bool debug = false;
+bool debug      = false;
 
 // Global functions prototype
 void renderdebug(palette*);
@@ -90,6 +90,7 @@ int main(int argc, char** argv)
 		}
 	}
 	Uint32 flags = (fullscreen ? SDL_OPENGL | SDL_FULLSCREEN : SDL_OPENGL);
+	flags |= SDL_GL_DOUBLEBUFFER;
 	//Initialize SDL
 	glutInit(&argc, argv);
 	SDL_Init(SDL_INIT_VIDEO);
@@ -111,7 +112,6 @@ int main(int argc, char** argv)
 		update();
 		// Game rendering, double-buffered
 		draw();
-		SDL_GL_SwapBuffers();
 
 		// Force screen refresh rate
 		if(1000.0 / REFRESHRATE > SDL_GetTicks() - gameloop_c)
@@ -136,6 +136,7 @@ void init()
 	glMatrixMode(GL_MODELVIEW);
 	// Set clear color
 	glClearColorM(COLOR_CORNFLOWERBLUE);
+
 	// Init input structures
 	input_initstate(&INPUT_STATE);
 	input_initstate(&INPUTSTATE_OLD);
@@ -191,9 +192,7 @@ void update()
 
 void draw()
 {
-	// Get rid of artifacts, reset draw pos
 	glClear(GL_COLOR_BUFFER_BIT);
-	glLoadIdentity();
 
 	// TODO: Render your game here.
 
@@ -207,6 +206,7 @@ void draw()
 	if(debug)
 		renderdebug(&MAINPALETTE);
 
+	SDL_GL_SwapBuffers();
 }
 
 void quit()

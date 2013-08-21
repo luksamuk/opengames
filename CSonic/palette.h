@@ -24,7 +24,7 @@
 
 // Standard colors
 #define COLOR_TRANSPARENT    0x0000
-#define COLOR_BLACK          0x0002
+#define COLOR_BLACK          0x0111
 #define COLOR_RED            0x0E00
 #define COLOR_GREEN          0x00E0
 #define COLOR_BLUE           0x000E
