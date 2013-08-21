@@ -47,9 +47,16 @@ Atualmente incluído:
 - Sistema de renderização de fases dentro de um certo limite, para evitar sobrecarga;
 - Tiles de teste feitos a partir de código.
 - Suporte a resoluções 1x, 2x, 3x, 4x, 720p, 1080p - fullscreen e windowed;
-- Suporte a 25, 20, 30 e 60 FPS.
+- Suporte a 25, 20, 30 e 60 FPS;
+- Câmera 2D para cada level;
+- Suporte total à cor transparente.
 
 A fazer:
-- Escrever câmera;
+- Substituir bloco zero como bloco comum, e completamente transparente por default. Rever esta decisão, porém, pois se o bloco zero for tratado de forma especial, a renderização será um pouco otimizada.
+- Armazenar modo da paleta na representação da cor;
+- Função para resgatar modo da paleta na representação da cor;
+- Colisão para cada piece;
 - Implementar motion blur;
-- Escrever programa de criação e edição de fases.
+- Escrever programa de criação e edição de fases;
+- Terminar funções de carregar/exportar paletas e fases;
+- Inserir personagens, inimigos, itens e etc que podem ser configurados através de script.

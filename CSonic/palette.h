@@ -7,42 +7,42 @@
 
 /* Macros */
 // System definitions
-#define MAX_COLORS_NOMODES   512
+#define MAX_COLORS_NOMODES   512u
 
 
 // Definitions for building your own color.
 // Each definition is 8-bit sized
-#define COLOR_DEF_0              0x00
-#define COLOR_DEF_1              0x02
-#define COLOR_DEF_2              0x04
-#define COLOR_DEF_3              0x06
-#define COLOR_DEF_4              0x08
-#define COLOR_DEF_5              0x0A
-#define COLOR_DEF_6              0x0C
-#define COLOR_DEF_7              0x0E
+#define COLOR_DEF_0              0x00u
+#define COLOR_DEF_1              0x02u
+#define COLOR_DEF_2              0x04u
+#define COLOR_DEF_3              0x06u
+#define COLOR_DEF_4              0x08u
+#define COLOR_DEF_5              0x0Au
+#define COLOR_DEF_6              0x0Cu
+#define COLOR_DEF_7              0x0Eu
 
 
 // Standard colors
-#define COLOR_TRANSPARENT    0x0000
-#define COLOR_BLACK          0x0111
-#define COLOR_RED            0x0E00
-#define COLOR_GREEN          0x00E0
-#define COLOR_BLUE           0x000E
-#define COLOR_WHITE          0x0EEE
-#define COLOR_CORNFLOWERBLUE 0x068E
+#define COLOR_TRANSPARENT    0xF000u
+#define COLOR_BLACK          0x0000u
+#define COLOR_RED            0x0E00u
+#define COLOR_GREEN          0x00E0u
+#define COLOR_BLUE           0x000Eu
+#define COLOR_WHITE          0x0EEEu
+#define COLOR_CORNFLOWERBLUE 0x068Eu
 
 
 // Color creation operations
 #define NEXTCOLOR(x)  (x = (x << 4))
 #define MIXCOLOR(x,y) (x = (x | y))
 #define SHADOWCOLOR(x) (x >> 1)
-#define HIGHLIGHTCOLOR(x) ((x >> 1) + 0x0777)
+#define HIGHLIGHTCOLOR(x) ((x >> 1) + 0x0777u)
 
 
 // Color extraction operations
-#define GETRCOLOR(x) ((x ^ ~(~x | 0x000F << 8)) >> 8)
-#define GETGCOLOR(x) ((x ^ ~(~x | 0x000F << 4)) >> 4)
-#define GETBCOLOR(x) (x ^ ~(~x | 0x000F))
+#define GETRCOLOR(x) ((x ^ ~(~x | 0x000Fu << 8)) >> 8)
+#define GETGCOLOR(x) ((x ^ ~(~x | 0x000Fu << 4)) >> 4)
+#define GETBCOLOR(x) (x ^ ~(~x | 0x000Fu))
 #define MASKTOBYTE(x) (x * 8)
 
 typedef word color;
@@ -54,30 +54,14 @@ typedef struct PALETTE_DEF
 } palette;
 
 
-// Converts color mask to GLfloat
 float MASKTOFLOAT(color);
-// Retrieves hue from a color
 float GETCOLORHUE(color);
-
-// Creates a color from three bytes
 color createcolor(byte, byte, byte);
-
-// Loads the global palette
 void  gpalette_load(palette*);
-
-// Loads a palette from a file
 void  palette_load(palette*, const char*);
-
-// Exports palette to file
 void  palette_export(palette*, const char*);
-
-// Unloads any palette
 void  palette_unload(palette*);
-
-// Returns a color from a palette
 color getcolor(palette*, int);
-
-// Prints color info on console
 void  dumpcolor(color);
 
 

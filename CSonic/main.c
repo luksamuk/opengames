@@ -135,11 +135,15 @@ void init()
 		glOrtho(0, WIN_WIDTH, WIN_HEIGHT, 0, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
 	// Set clear color
-	glClearColorM(COLOR_CORNFLOWERBLUE);
+	glClearColorM(COLOR_BLACK);
 
 	// Init input structures
 	input_initstate(&INPUT_STATE);
 	input_initstate(&INPUTSTATE_OLD);
+
+	// Enable transparency
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable( GL_BLEND );
 
 	// TODO: Init your game logic here.
 
@@ -205,6 +209,20 @@ void draw()
 	// Render main palette, if active.
 	if(debug)
 		renderdebug(&MAINPALETTE);
+
+	// Render camera position
+	glPushMatrix();
+	glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, WIN_WIDTH, WIN_HEIGHT, 0, -1, 1);
+	glMatrixMode(GL_MODELVIEW);
+	char str[255];
+	sprintf(str, "0x%08X\n0x%08X\n",
+		level_getcamera(&tstlvl).x,
+		level_getcamera(&tstlvl).y);
+	glColorM(COLOR_WHITE);
+	renderBitmapString(5.0f, WIN_HEIGHT - 28, str);
+	glPopMatrix();
 
 	SDL_GL_SwapBuffers();
 }
@@ -368,24 +386,15 @@ void renderdebug(palette* pal)
 		glEnd();
 
 	}
-
 	// Render color info
 	if(INPUT_STATE.mousepos.y <= colorpsize * 75)
 	{
 		int i = INPUT_STATE.mousepos.x / colorpsize;
 		sprintf(output, "%03u -> 0x%04X", i, MAINPALETTE.data[i]);
 
-		glColorM(COLOR_BLACK);
+		glColorM(COLOR_WHITE);
 		renderBitmapString(5.0f, (colorpsize * 75) + 10.0f, output);
 	}
-
-	// Render camera position
-	char str[255];
-	sprintf(str, "0x%08X\n0x%08X\n",
-		level_getcamera(&tstlvl).x,
-		level_getcamera(&tstlvl).y);
-	glColorM(COLOR_WHITE);
-	renderBitmapString(5.0f, WIN_HEIGHT - 28, str);
 
 	glPopMatrix();
 }

@@ -3,6 +3,8 @@
 
 #include "global.h"
 
+typedef qword collision_mask;
+
 typedef struct TILE_8X8
 {
 	color colors[8][8];
@@ -11,8 +13,8 @@ typedef struct TILE_8X8
 typedef struct TILE_16X16
 {
 	byte tiles[2][2];
-	// TODO:
 	// Collision
+	collision_mask collision;
 } tile16;
 
 typedef struct TILE_128X128

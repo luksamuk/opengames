@@ -136,15 +136,15 @@ vec2 level_getcamera(level* lvl)
 
 void level_cameraclamp(level* lvl)
 {
-	if(lvl->camera.x < 0xA0)
-		lvl->camera.x = 0xA0;
-	else if(lvl->camera.x > (lvl->levelsize_x - 0xA0))
-		lvl->camera.x = (lvl->levelsize_x - 0xA0);
+	if(lvl->camera.x < 0xA0u)
+		lvl->camera.x = 0xA0u;
+	else if(lvl->camera.x > (lvl->levelsize_x - 0xA0u))
+		lvl->camera.x = (lvl->levelsize_x - 0xA0u);
 
-	if(lvl->camera.y < 0x78)
-		lvl->camera.y = 0x78;
-	else if(lvl->camera.y > (lvl->levelsize_y - 0x78))
-		lvl->camera.y = (lvl->levelsize_y - 0x78);
+	if(lvl->camera.y < 0x78u)
+		lvl->camera.y = 0x78u;
+	else if(lvl->camera.y > (lvl->levelsize_y - 0x78u))
+		lvl->camera.y = (lvl->levelsize_y - 0x78u);
 }
 
 void level_ortho_camera(level* lvl)

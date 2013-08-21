@@ -5,8 +5,8 @@ void input_initstate(inputstate* state)
 	state->hat.x = state->hat.y    = 0;
 	state->a = state->b = state->c = 0x0;
 	state->start = state->select   = 0x0;
-	state->mousepos.x              = 0x00000000;
-	state->mousepos.y              = 0x00000000;
+	state->mousepos.x              = 0xF0000000;
+	state->mousepos.y              = 0xF0000000;
 }
 
 void input_copystate(inputstate* dest, inputstate src)

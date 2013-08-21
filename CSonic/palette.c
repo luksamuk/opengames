@@ -60,9 +60,9 @@ void gpalette_load(palette* p)
 	p->data = malloc(sizeof(color) * MAX_COLORS_NOMODES);
 
 	int currentcolor = 0;
-	for(i = 0x00; i <= 0x0E; i += 0x02)
-		for(j = 0x00; j <= 0x0E; j += 0x02)
-			for(k = 0x00; k <= 0x0E; k += 0x02)
+	for(i = 0x00u; i <= 0x0Eu; i += 0x02u)
+		for(j = 0x00u; j <= 0x0Eu; j += 0x02u)
+			for(k = 0x00u; k <= 0x0Eu; k += 0x02u)
 			{
 				p->data[currentcolor] = createcolor(i, j, k);
 				currentcolor++;
@@ -111,6 +111,9 @@ void dumpcolor(color c)
 
 void glClearColorM(color c)
 {
+	if(c == COLOR_TRANSPARENT)
+		glClearColorM(COLOR_BLACK);
+	else
 	glClearColor(MASKTOFLOAT(GETRCOLOR(c)),
 		         MASKTOFLOAT(GETGCOLOR(c)),
 		         MASKTOFLOAT(GETBCOLOR(c)),
@@ -119,6 +122,9 @@ void glClearColorM(color c)
 
 void glColorM(color c)
 {
+	if(c == COLOR_TRANSPARENT)
+		glColor4b(0, 0, 0, 0);
+	else
 	glColor3b(MASKTOBYTE(GETRCOLOR(c)),
 			  MASKTOBYTE(GETGCOLOR(c)),
 			  MASKTOBYTE(GETBCOLOR(c)));
