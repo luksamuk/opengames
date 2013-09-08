@@ -70,6 +70,7 @@ void  dumpcolor(color);
 // Sets OpenGL to use a color from the palette as
 // clear color
 void glClearColorM(color);
+void glClearAccumM(color);
 
 // Sets OpenGL to render a color from the palette
 void glColorM(color);

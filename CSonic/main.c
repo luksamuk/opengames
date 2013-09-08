@@ -14,7 +14,8 @@ inputstate INPUT_STATE;
 inputstate INPUTSTATE_OLD;
 level tstlvl;
 
-bool debug      = false;
+bool debug      = false,
+     motionblur = false;
 
 // Global functions prototype
 void renderdebug(palette*);
@@ -87,16 +88,21 @@ int main(int argc, char** argv)
 				REFRESHRATE = 20.0;
 			else if(!strcmp(argv[i], "-60fps"))
 				REFRESHRATE = 60.0;
+
+			// Motion blur (beta)
+			else if(!strcmp(argv[i], "-mblur"))
+				motionblur = true;
 		}
 	}
-	Uint32 flags = (fullscreen ? SDL_OPENGL | SDL_FULLSCREEN : SDL_OPENGL);
+	Uint32 flags = (fullscreen ? SDL_FULLSCREEN : 0);
+	flags |= SDL_OPENGL;
 	flags |= SDL_GL_DOUBLEBUFFER;
 	//Initialize SDL
 	glutInit(&argc, argv);
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_WM_SetCaption(GAMENAME, NULL);
 	SDL_WM_SetIcon(SDL_LoadBMP(GAMEICON), NULL);
-	surface = SDL_SetVideoMode(WIN_WIDTH, WIN_HEIGHT, 8, flags);
+	surface = SDL_SetVideoMode(WIN_WIDTH, WIN_HEIGHT, 32, flags);
 
 	// Initialize game and load resources
 	init();
@@ -134,16 +140,42 @@ void init()
 		glLoadIdentity();
 		glOrtho(0, WIN_WIDTH, WIN_HEIGHT, 0, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
-	// Set clear color
-	glClearColorM(COLOR_BLACK);
 
 	// Init input structures
 	input_initstate(&INPUT_STATE);
 	input_initstate(&INPUTSTATE_OLD);
 
-	// Enable transparency
+	// Enable transparency, depth
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable( GL_BLEND );
+	glEnable(GL_BLEND | GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
+	// Set clear color, and clear draw and accum buffers
+	glClearColorM(COLOR_BLACK);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	if(motionblur)
+	{
+		glClearAccumM(COLOR_BLACK);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		// Setup depth buffer
+		glClearDepth(0.7f);
+		//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	}
+
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE,            8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,          8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,           8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,          8);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,          16);
+    SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,         32);
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,      8);
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,    8);
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,     8);
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,    8);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  2);
 
 	// TODO: Init your game logic here.
 
@@ -196,10 +228,17 @@ void update()
 
 void draw()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if(motionblur)
+	{
+		glAccum(GL_RETURN, 0.95f);
+		glClear(GL_ACCUM_BUFFER_BIT);
+	}
+
 
 	// TODO: Render your game here.
 
+	//-------------------------------
 	// Level camera
 	level_ortho_camera(&tstlvl);
 
@@ -224,7 +263,12 @@ void draw()
 	renderBitmapString(5.0f, WIN_HEIGHT - 28, str);
 	glPopMatrix();
 
+	//---------------------
+
 	SDL_GL_SwapBuffers();
+
+	if(motionblur)
+		glAccum(GL_ACCUM, 0.9f);
 }
 
 void quit()

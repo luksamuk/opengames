@@ -12,7 +12,7 @@ typedef struct TILE_16X16
 {
 	byte tiles[2][2];
 	// Collision Mask
-	byte[16] collision_mask;
+	byte collision_mask[16];
 	byte     angle;
 } tile16;
 

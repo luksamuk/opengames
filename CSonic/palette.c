@@ -117,7 +117,18 @@ void glClearColorM(color c)
 	glClearColor(MASKTOFLOAT(GETRCOLOR(c)),
 		         MASKTOFLOAT(GETGCOLOR(c)),
 		         MASKTOFLOAT(GETBCOLOR(c)),
-		         1.0f);
+		         0.0f);
+}
+
+void glClearAccumM(color c)
+{
+	if(c == COLOR_TRANSPARENT)
+		glClearAccumM(COLOR_BLACK);
+	else
+	glClearAccum(MASKTOFLOAT(GETRCOLOR(c)),
+		         MASKTOFLOAT(GETGCOLOR(c)),
+		         MASKTOFLOAT(GETBCOLOR(c)),
+		         0.0f);
 }
 
 void glColorM(color c)
