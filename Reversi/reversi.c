@@ -13,9 +13,9 @@
 typedef unsigned char           byte;
 #define TABULEIRO_LINE_DISTANCE 0.25f
 #define POINT_SIZE              30.0f
-#define CASA_VAZIA              (byte)0
-#define CASA_PRETA              (byte)1
-#define CASA_BRANCA             (byte)2
+#define CASA_VAZIA              0x00u
+#define CASA_PRETA              0x01u
+#define CASA_BRANCA             0x02u
 
 int vwprt_x, vwprt_y;
 
@@ -29,9 +29,13 @@ void renderBitmapString(float, float, char*);
 char msg[50];
 
 // Objetos de jogo
-byte tabuleiro[8][8] = {0};
+byte tabuleiro[8][8] = {CASA_VAZIA};
 bool turn;
 void drawTabuleiro();
+bool flipPecas(int, int, int, byte);
+bool checkPeca(int, int);
+void putPeca(int, int, byte);
+void checkPecaPosta(int, int);
 
 // Objetos de controle
 bool   MouseLButton, oldMouseLButton;
@@ -102,8 +106,9 @@ void OnIdle()
 	{
 		if(tabuleiro[i][j] == CASA_VAZIA)
 		{
-			tabuleiro[i][j] = (turn ? CASA_BRANCA : CASA_PRETA);
-			turn = !turn;
+			if(turn == true)
+				putPeca(i, j, CASA_BRANCA);
+			else putPeca(i, j, CASA_PRETA);
 		}
 	}
 
@@ -247,4 +252,75 @@ void OnMouseMove(int x, int y)
 {
 	mousepressX = (((float)x / (float)vwprt_x) * 2.0f);
 	mousepressY = (((float)y / (float)vwprt_y) * 2.0f);
+}
+
+
+bool flipPecas(int i, int j, int dir, byte tipo)
+{
+	if(i < 0 || i > 7 || j < 0 || j > 7)
+		return false;
+	else if (tabuleiro[i][j] == tipo)
+		return true;
+	else if(tabuleiro[i][j] == CASA_VAZIA)
+		return false;
+
+	switch(dir)
+	{
+	// Cima
+	case 0:
+		if(flipPecas(i, j - 1, dir, tipo))
+			tabuleiro[i][j] = tipo;
+		break;
+	// Direita
+	case 1:
+		if(flipPecas(i + 1, j, dir, tipo))
+			tabuleiro[i][j] = tipo;
+		break;
+	// Baixo
+	case 2:
+		if(flipPecas(i, j + 1, dir, tipo))
+			tabuleiro[i][j] = tipo;
+		break;
+	// Esquerda
+	case 3:
+		if(flipPecas(i - 1, j, dir, tipo))
+			tabuleiro[i][j] = tipo;
+		break;
+	}
+}
+
+void checkPecaPosta(int i, int j)
+{
+	// Cima
+	flipPecas(i, j - 1, 0, tabuleiro[i][j]);
+	// Direita
+	flipPecas(i + 1, j, 1, tabuleiro[i][j]);
+	// Baixo
+	flipPecas(i, j + 1, 2, tabuleiro[i][j]);
+	// Esquerda
+	flipPecas(i - 1, j, 3, tabuleiro[i][j]);
+}
+
+void putPeca(int i, int j, byte peca)
+{
+	bool cima     = checkPeca(i, j - 1),
+	     baixo    = checkPeca(i, j + 1),
+	     esquerda = checkPeca(i - 1, j),
+	     direita  = checkPeca(i + 1, j);
+
+	if(cima || baixo || esquerda || direita)
+	{
+		tabuleiro[i][j] = peca;
+		checkPecaPosta(i, j);
+		turn = !turn;
+	}
+}
+
+bool checkPeca(int i, int j)
+{
+	if(i < 0 || i > 7 || j < 0 || j > 7)
+		return false;
+	else if(tabuleiro[i][j] == CASA_VAZIA)
+		return false;
+	return true;
 }
