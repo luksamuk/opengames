@@ -39,7 +39,7 @@ int main(int argc, char** argv)
 	// Gets buffer size and FPS.
 	WIN_WIDTH  = 0x140;
 	WIN_HEIGHT = 0x0F0;
-	REFRESHRATE = 30.0;
+	REFRESHRATE = 60.0;
 
 	bool fullscreen = false;
 	if(argc > 1)
