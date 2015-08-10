@@ -24,7 +24,7 @@ typedef unsigned char byte;
 
 #define WIDTH      800u
 #define HEIGHT     800u
-#define SQUARE_SIDE 10u
+#define SQUARE_SIDE 5u
 
 float SQUARE_SIDE_N;
 bool pause_required = true;
@@ -91,6 +91,11 @@ void createRPentomino(int, int, int);
 void createDiehard(int, int, int);
 void createAcorn(int, int, int);
 
+// Infinite growth
+void createMinimalInfiniteGrowth(int, int, int);
+void createFiveByFiveInfiniteGrowth(int, int, int);
+void create1DInfiniteGrowth(int, int, int);
+
 char instructions[] = "Stopped\nPress Right Mouse Button for menu";
 
 
@@ -122,6 +127,10 @@ void generateMenu()
 	glutAddMenuEntry("R-Pentomino", 12);
 	glutAddMenuEntry("Diehard", 13);
 	glutAddMenuEntry("Acorn", 14);
+
+	glutAddMenuEntry("Minimal Infinite Growth", 15);
+	glutAddMenuEntry("5x5 Infinite Growth", 16);
+	glutAddMenuEntry("1D Infinite Growth", 17);
 
 	h_mainmenu = glutCreateMenu(HandleMainMenu);
 	
@@ -193,9 +202,14 @@ void HandleCreationMenu(int value)
 		case 10: createLWSS(x, y, 0); break;
 		case 11: createGosperGliderGun(x, y, 0); break;
 		case 12: createRPentomino(x, y, 0); break;
-		case 13: createDiehard(x, y, 0); break; // Diehard
-		case 14: createAcorn(x, y, 0); break; // Acorn
+		case 13: createDiehard(x, y, 0); break;
+		case 14: createAcorn(x, y, 0); break;
+
+		case 15: createMinimalInfiniteGrowth(x, y, 0); break;
+		case 16: createFiveByFiveInfiniteGrowth(x, y, 0); break;
+		case 17: create1DInfiniteGrowth(x, y, 0); break;
 		}
+		glutPostRedisplay();
 	}
 }
 
@@ -673,15 +687,15 @@ void createGlider(int x, int y, int angle)
 
 void createLWSS(int x, int y, int angle)
 {
-	table    [x][y + 15] = true;
-	table[x + 3][y + 15] = true;
-	table[x + 4][y + 16] = true;
-	table    [x][y + 17] = true;
-	table[x + 4][y + 17] = true;
-	table[x + 1][y + 18] = true;
-	table[x + 2][y + 18] = true;
-	table[x + 3][y + 18] = true;
-	table[x + 4][y + 18] = true;
+	table    [x][y]     = true;
+	table[x + 3][y]     = true;
+	table[x + 4][y + 1] = true;
+	table    [x][y + 2] = true;
+	table[x + 4][y + 2] = true;
+	table[x + 1][y + 3] = true;
+	table[x + 2][y + 3] = true;
+	table[x + 3][y + 3] = true;
+	table[x + 4][y + 3] = true;
 }
 
 void createGosperGliderGun(int x, int y, int angle)
@@ -766,4 +780,78 @@ void createAcorn(int x, int y, int angle)
 	table[x + 5][y + 3] = true;
 	table[x + 6][y + 3] = true;
 	table[x + 7][y + 3] = true;
+}
+
+void createMinimalInfiniteGrowth(int x, int y, int angle)
+{
+	table    [x][y + 5] = true;
+	table[x + 2][y + 4] = true;
+	table[x + 2][y + 5] = true;
+	table[x + 4][y + 1] = true;
+	table[x + 4][y + 2] = true;
+	table[x + 4][y + 3] = true;
+	table[x + 6][y]     = true;
+	table[x + 6][y + 1] = true;
+	table[x + 6][y + 2] = true;
+	table[x + 7][y + 1] = true;
+}
+
+void createFiveByFiveInfiniteGrowth(int x, int y, int angle)
+{
+	table    [x][y]     = true;
+	table[x + 1][y]     = true;
+	table[x + 2][y]     = true;
+	table[x + 4][y]     = true;
+	table[x][y + 1]     = true;
+	table[x + 3][y + 2] = true;
+	table[x + 4][y + 2] = true;
+	table[x + 1][y + 3] = true;
+	table[x + 2][y + 3] = true;
+	table[x + 4][y + 3] = true;
+	table    [x][y + 4] = true;
+	table[x + 2][y + 4] = true;
+	table[x + 4][y + 4] = true;
+}
+
+void create1DInfiniteGrowth(int x, int y, int angle)
+{
+	table    [x][y] = true;
+	table[x + 1][y] = true;
+	table[x + 2][y] = true;
+	table[x + 3][y] = true;
+	table[x + 4][y] = true;
+	table[x + 5][y] = true;
+	table[x + 6][y] = true;
+	table[x + 7][y] = true;
+
+	table [x + 9][y] = true;
+	table[x + 10][y] = true;
+	table[x + 11][y] = true;
+	table[x + 12][y] = true;
+	table[x + 13][y] = true;
+
+
+
+	table[x + 17][y] = true;
+	table[x + 18][y] = true;
+	table[x + 19][y] = true;
+
+
+
+
+
+
+	table[x + 26][y] = true;
+	table[x + 27][y] = true;
+	table[x + 28][y] = true;
+	table[x + 29][y] = true;
+	table[x + 30][y] = true;
+	table[x + 31][y] = true;
+	table[x + 32][y] = true;
+
+	table[x + 34][y] = true;
+	table[x + 35][y] = true;
+	table[x + 36][y] = true;
+	table[x + 37][y] = true;
+	table[x + 38][y] = true;
 }
