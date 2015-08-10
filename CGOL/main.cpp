@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 	glutReshapeFunc(OnReshape);
 	glutKeyboardFunc(OnKeyPress);
 	glutMouseFunc(OnMouseClick);
-	glutPassiveMotionFunc(OnMouseMove);
+	glutMotionFunc(OnMouseMove);
 
 	table = createTable();
 
@@ -303,6 +303,12 @@ void OnKeyPress(unsigned char key, int x, int y)
 		fps = 5;
 	}
 	else if(key == '>' && pause_required) OnIdle(0);
+	else if(key == 'c')
+	{
+		deleteTable(table);
+		table = createTable();
+		glutPostRedisplay();
+	}
 }
 
 bool mousedown = false;
@@ -316,8 +322,7 @@ void OnMouseClick(int button, int state, int x, int y)
 
 		if(state == GLUT_DOWN)
 		{
-			if(x <= WIDTH && y <= HEIGHT)
-				//table[x / SQUARE_SIDE][y / SQUARE_SIDE] = true;
+			if((xpos_perc > 0.0f && xpos_perc < 1.0f) && (ypos_perc > 0.0f && ypos_perc < 1.0f))
 				table[int(xpos_perc * n_squares())][int(ypos_perc * n_squares())] = true;
 			mousedown = true;
 		}
@@ -331,7 +336,15 @@ void OnMouseClick(int button, int state, int x, int y)
 void OnMouseMove(int x, int y)
 {
 	if(mousedown)
-		table[x / SQUARE_SIDE][y / SQUARE_SIDE] = true;
+	{
+		float xpos_perc, ypos_perc;
+		xpos_perc = float(x) / float(TRUEWIDTH);
+		ypos_perc = float(y) / float(TRUEHEIGHT);
+
+		if((xpos_perc > 0.0f && xpos_perc < 1.0f) && (ypos_perc > 0.0f && ypos_perc < 1.0f))
+			table[int(xpos_perc * n_squares())][int(ypos_perc * n_squares())] = true;
+		glutPostRedisplay();
+	}
 }
 
 
