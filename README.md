@@ -60,3 +60,23 @@ A fazer:
 - Escrever programa de criação e edição de fases;
 - Terminar funções de carregar/exportar paletas e fases;
 - Inserir personagens, inimigos, itens e etc que podem ser configurados através de script.
+
+CGOL
+-----
+
+![CGOL](screenshots/cgol.png)
+
+Versão própria do Jogo da Vida de Conway.
+Escrito em C++, utiliza OpenGL/GLUT.
+
+Atualmente concluído:
+- Implementação da grade e das regras do jogo;
+- Implementação do redimensionamento da tela;
+- Atalhos de teclado;
+- Formas comuns para geração através de menu com clique direito;
+- Menu de clique direito;
+
+A fazer:
+- Mais formas comuns, especialmente formas de crescimento indefinido;
+- Criar um menu mais conciso;
+- Criar um menu melhor organizado em termos de criação de formas, por categoria.

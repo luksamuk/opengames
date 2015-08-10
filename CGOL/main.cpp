@@ -1,7 +1,12 @@
 // Game of Life example
+// Emulates a version of Conway's Game of Life.
+// This is a B3/S23 game (Born with 3 neighbors,
+// Stays alive with 2 >= x >= 3).
 // Author: Lucas Vieira
-// TODO: you'll fataly get a segfault when
-// creating things outside of canvas. Fix this.
+// TODO:
+// - you'll fataly get a segfault when
+//   creating things outside of canvas. Fix this.
+// - Submenus on shape creation for each shape type
 
 
 #include <cstdio>
@@ -13,7 +18,6 @@ extern "C"
 	#include <GL/gl.h>
 	#include <GL/glut.h>
 	#include <GL/glu.h>
-	#include <unistd.h>
 }
 
 typedef unsigned char byte;
@@ -156,7 +160,7 @@ void HandleMainMenu(int value)
 		break;
 	case 4: // This doesn't work. Why... why, GLUT?? WHY????
 		deleteTable(table);
-		close(0);
+		//close(0); // requires unistd.h, but I'm not using it
 		break;
 	default: break;
 	}
