@@ -1,7 +1,7 @@
 // Game of Life example
 // Emulates a version of Conway's Game of Life.
 // This is a B3/S23 game (Born with 3 neighbors,
-// Stays alive with 2 >= x >= 3).
+// Stays alive with 2 <= x <= 3).
 // Author: Lucas Vieira
 // TODO:
 // - you'll fataly get a segfault when
@@ -22,8 +22,8 @@ extern "C"
 
 typedef unsigned char byte;
 
-#define WIDTH      800u
-#define HEIGHT     800u
+#define WIDTH      1080u
+#define HEIGHT     1080u
 #define SQUARE_SIDE 5u
 
 float SQUARE_SIDE_N;
