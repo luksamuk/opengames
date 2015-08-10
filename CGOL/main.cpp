@@ -1,5 +1,7 @@
 // Game of Life example
-// 
+// Author: Lucas Vieira
+// TODO: you'll fataly get a segfault when
+// creating things outside of canvas. Fix this.
 
 
 #include <cstdio>
@@ -35,6 +37,7 @@ void OnReshape(int, int);
 void OnKeyPress(unsigned char, int, int);
 void OnMouseClick(int, int, int, int);
 void OnMouseMove(int, int);
+void OnMouseMoveUnpressed(int, int);
 
 long long int lifespan = 0l;
 char lifespan_string[30];
@@ -81,10 +84,116 @@ void createLWSS(int, int, int);
 // Misc
 void createGosperGliderGun(int, int, int);
 void createRPentomino(int, int, int);
+void createDiehard(int, int, int);
+void createAcorn(int, int, int);
 
-char instructions[] = "Press ] to start iterations, [ to stop\n"
-                      "Press > to advance frame by frame\n"
-                      "Pushing ] more than once will make the game go faster";
+char instructions[] = "Stopped\nPress Right Mouse Button for menu";
+
+
+int h_mainmenu,
+    h_creationmenu,
+    MENU_RBUTTON_XPOS,
+	MENU_RBUTTON_YPOS;
+
+void HandleMainMenu(int);
+void HandleCreationMenu(int);
+void generateMenu()
+{
+	h_creationmenu = glutCreateMenu(HandleCreationMenu);
+	glutAddMenuEntry("Block", 0);
+	glutAddMenuEntry("Beehive", 1);
+	glutAddMenuEntry("Loaf", 2);
+	glutAddMenuEntry("Boat", 3);
+
+	glutAddMenuEntry("Blinker", 4);
+	glutAddMenuEntry("Toad", 5);
+	glutAddMenuEntry("Beacon", 6);
+	glutAddMenuEntry("Pulsar", 7);
+	glutAddMenuEntry("Pentadecathlon", 8);
+
+	glutAddMenuEntry("Glider", 9);
+	glutAddMenuEntry("Lightweight Spaceship", 10);
+
+	glutAddMenuEntry("Gosper's Glider Gun", 11);
+	glutAddMenuEntry("R-Pentomino", 12);
+	glutAddMenuEntry("Diehard", 13);
+	glutAddMenuEntry("Acorn", 14);
+
+	h_mainmenu = glutCreateMenu(HandleMainMenu);
+	
+	glutAddSubMenu("Create Here...", h_creationmenu);
+	glutAddMenuEntry("Start / Accelerate (])", 0);
+	glutAddMenuEntry("Stop ([)", 1);
+	glutAddMenuEntry("Step (>)", 2);
+	glutAddMenuEntry("Clean (c)", 3);
+	//glutAddMenuEntry("Exit", 4); // This SHOULD HAVE WORKED. :/
+
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+void HandleMainMenu(int value)
+{
+	switch(value)
+	{
+	case 0:
+		if(pause_required) {
+			pause_required = false;
+			OnIdle(0);
+		}
+		else fps += 5;
+		break;
+	case 1:
+		pause_required = true;
+		fps = 5;
+		break;
+	case 2:
+		if(pause_required) OnIdle(0);
+		break;
+	case 3:
+		deleteTable(table);
+		table = createTable();
+		glutPostRedisplay();
+		break;
+	case 4: // This doesn't work. Why... why, GLUT?? WHY????
+		deleteTable(table);
+		close(0);
+		break;
+	default: break;
+	}
+}
+
+void HandleCreationMenu(int value)
+{
+	float xpos_perc, ypos_perc;
+	xpos_perc = float(MENU_RBUTTON_XPOS) / float(TRUEWIDTH);
+	ypos_perc = float(MENU_RBUTTON_YPOS) / float(TRUEHEIGHT);
+	int x = xpos_perc * n_squares();
+	int y = ypos_perc * n_squares();
+
+	if((xpos_perc > 0.0f && xpos_perc < 1.0f) && (ypos_perc > 0.0f && ypos_perc < 1.0f))
+	{
+		switch(value)
+		{
+		case 0: createBlock(x, y, 0); break;
+		case 1: createBeehive(x, y, 0); break;
+		case 2: createLoaf(x, y, 0); break;
+		case 3: createBoat(x, y, 0); break;
+
+		case 4: createBlinker(x, y, 0); break;
+		case 5: createToad(x, y, 0); break;
+		case 6: createBeacon(x, y, 0); break;
+		case 7: createPulsar(x, y, 0); break;
+		case 8: createPentadecathlon(x, y, 0); break;
+
+		case 9: createGlider(x, y, 0); break;
+		case 10: createLWSS(x, y, 0); break;
+		case 11: createGosperGliderGun(x, y, 0); break;
+		case 12: createRPentomino(x, y, 0); break;
+		case 13: createDiehard(x, y, 0); break; // Diehard
+		case 14: createAcorn(x, y, 0); break; // Acorn
+		}
+	}
+}
 
 struct neighbor
 {
@@ -110,12 +219,14 @@ int main(int argc, char** argv)
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(WIDTH, HEIGHT);
 	glutCreateWindow("Conway's Game of Life");
-	glutFullScreen();
 	glutDisplayFunc(OnDisplay);
 	glutReshapeFunc(OnReshape);
 	glutKeyboardFunc(OnKeyPress);
 	glutMouseFunc(OnMouseClick);
 	glutMotionFunc(OnMouseMove);
+	glutPassiveMotionFunc(OnMouseMoveUnpressed);
+	//glutFullScreen();
+	generateMenu();
 
 	table = createTable();
 
@@ -134,7 +245,7 @@ int main(int argc, char** argv)
 	//createToad(0, 55, 0);
 	//createBeacon(0, 62, 0);
 	//createPulsar(20, 30, 0);
-	createRPentomino(n_squares() / 2, n_squares() / 2, 0);
+	//createRPentomino(n_squares() / 2, n_squares() / 2, 0);
 
 	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
 
@@ -214,28 +325,9 @@ void OnIdle(int val)
 void OnDisplay()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	glColor3f(0.0f, 0.0f, 0.0f);
-	// Draw grid
-	for(byte i = 0; i < n_squares(); i++)
-	{
-		glPushMatrix();
-		glBegin(GL_LINES);
-		glVertex2f(-1.0f + (i * SQUARE_SIDE_N), 1.0f);
-		glVertex2f(-1.0f + (i * SQUARE_SIDE_N), -1.0f);
-		glEnd();
-		glPopMatrix();
-	}
-	for(byte j = 0; j < n_squares(); j++)
-	{
-		glPushMatrix();
-		glBegin(GL_LINES);
-		glVertex2f(-1.0f, 1.0f - (j * SQUARE_SIDE_N));
-		glVertex2f(1.0f, 1.0f - (j * SQUARE_SIDE_N));
-		glEnd();
-		glPopMatrix();
-	}
 
 	// Draw cells
+	glColor3f(0.0f, 0.0f, 0.0f);
 	for(byte i = 0; i < n_squares(); i++)
 		for(byte j = 0; j < n_squares(); j++)
 		{
@@ -257,6 +349,27 @@ void OnDisplay()
 				glPopMatrix();
 			}
 		}
+
+	// Draw grid
+	glColor3f(0.0f, 0.5f, 0.0f);
+	for(byte i = 0; i < n_squares(); i++)
+	{
+		glPushMatrix();
+		glBegin(GL_LINES);
+		glVertex2f(-1.0f + (i * SQUARE_SIDE_N), 1.0f);
+		glVertex2f(-1.0f + (i * SQUARE_SIDE_N), -1.0f);
+		glEnd();
+		glPopMatrix();
+	}
+	for(byte j = 0; j < n_squares(); j++)
+	{
+		glPushMatrix();
+		glBegin(GL_LINES);
+		glVertex2f(-1.0f, 1.0f - (j * SQUARE_SIDE_N));
+		glVertex2f(1.0f, 1.0f - (j * SQUARE_SIDE_N));
+		glEnd();
+		glPopMatrix();
+	}
 
 	if(pause_required) {
 		glColor3f(0.7f, 0.0f, 0.0f);
@@ -334,7 +447,7 @@ void OnMouseClick(int button, int state, int x, int y)
 }
 
 void OnMouseMove(int x, int y)
-{
+{	
 	if(mousedown)
 	{
 		float xpos_perc, ypos_perc;
@@ -345,6 +458,12 @@ void OnMouseMove(int x, int y)
 			table[int(xpos_perc * n_squares())][int(ypos_perc * n_squares())] = true;
 		glutPostRedisplay();
 	}
+}
+
+void OnMouseMoveUnpressed(int x, int y)
+{
+	MENU_RBUTTON_XPOS = x;
+	MENU_RBUTTON_YPOS = y;
 }
 
 
@@ -619,4 +738,28 @@ void createRPentomino(int x, int y, int angle)
 	table[x + 1][y + 2] = true;
 	table[x + 2][y + 2] = true;
 	table[x + 2][y + 3] = true;
+}
+
+void createDiehard(int x, int y, int angle)
+{
+	table[x + 1][y + 2] = true;
+	table[x + 2][y + 2] = true;
+	table[x + 2][y + 3] = true;
+
+	table[x + 6][y + 3] = true;
+	table[x + 7][y + 3] = true;
+	table[x + 8][y + 3] = true;
+
+	table[x + 7][y + 1] = true;
+}
+
+void createAcorn(int x, int y, int angle)
+{
+	table[x + 1][y + 3] = true;
+	table[x + 2][y + 3] = true;
+	table[x + 2][y + 1] = true;
+	table[x + 4][y + 2] = true;
+	table[x + 5][y + 3] = true;
+	table[x + 6][y + 3] = true;
+	table[x + 7][y + 3] = true;
 }
