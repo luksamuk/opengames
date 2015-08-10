@@ -28,7 +28,7 @@ typedef unsigned char byte;
 
 float SQUARE_SIDE_N;
 bool pause_required = true;
-int fps = 5;
+int fps = 30;
 int TRUEWIDTH, TRUEHEIGHT;
 
 constexpr byte n_squares() { return WIDTH / SQUARE_SIDE; }
@@ -90,6 +90,7 @@ void createGosperGliderGun(int, int, int);
 void createRPentomino(int, int, int);
 void createDiehard(int, int, int);
 void createAcorn(int, int, int);
+void createFillScreen();
 
 // Infinite growth
 void createMinimalInfiniteGrowth(int, int, int);
@@ -101,6 +102,11 @@ char instructions[] = "Stopped\nPress Right Mouse Button for menu";
 
 int h_mainmenu,
     h_creationmenu,
+    h_creationmenu_still,
+    h_creationmenu_oscillating,
+    h_creationmenu_spaceships,
+    h_creationmenu_misc,
+    h_creationmenu_infinitegrowth,
     MENU_RBUTTON_XPOS,
 	MENU_RBUTTON_YPOS;
 
@@ -108,29 +114,41 @@ void HandleMainMenu(int);
 void HandleCreationMenu(int);
 void generateMenu()
 {
-	h_creationmenu = glutCreateMenu(HandleCreationMenu);
+	h_creationmenu_still = glutCreateMenu(HandleCreationMenu);
 	glutAddMenuEntry("Block", 0);
 	glutAddMenuEntry("Beehive", 1);
 	glutAddMenuEntry("Loaf", 2);
 	glutAddMenuEntry("Boat", 3);
 
+	h_creationmenu_oscillating = glutCreateMenu(HandleCreationMenu);
 	glutAddMenuEntry("Blinker", 4);
 	glutAddMenuEntry("Toad", 5);
 	glutAddMenuEntry("Beacon", 6);
 	glutAddMenuEntry("Pulsar", 7);
 	glutAddMenuEntry("Pentadecathlon", 8);
 
+	h_creationmenu_spaceships = glutCreateMenu(HandleCreationMenu);
 	glutAddMenuEntry("Glider", 9);
-	glutAddMenuEntry("Lightweight Spaceship", 10);
+	glutAddMenuEntry("Lightweight", 10);
 
+	h_creationmenu_misc = glutCreateMenu(HandleCreationMenu);
 	glutAddMenuEntry("Gosper's Glider Gun", 11);
 	glutAddMenuEntry("R-Pentomino", 12);
 	glutAddMenuEntry("Diehard", 13);
 	glutAddMenuEntry("Acorn", 14);
 
-	glutAddMenuEntry("Minimal Infinite Growth", 15);
-	glutAddMenuEntry("5x5 Infinite Growth", 16);
-	glutAddMenuEntry("1D Infinite Growth", 17);
+	h_creationmenu_infinitegrowth = glutCreateMenu(HandleCreationMenu);
+	glutAddMenuEntry("Minimal", 15);
+	glutAddMenuEntry("5x5", 16);
+	glutAddMenuEntry("Unidimensional", 17);
+
+	h_creationmenu = glutCreateMenu(HandleCreationMenu);
+	glutAddSubMenu("Still life...", h_creationmenu_still);
+	glutAddSubMenu("Oscillators...", h_creationmenu_oscillating);
+	glutAddSubMenu("Spaceships...", h_creationmenu_spaceships);
+	glutAddSubMenu("Infinite Growth...", h_creationmenu_infinitegrowth);
+	glutAddSubMenu("Misc...", h_creationmenu_misc);
+
 
 	h_mainmenu = glutCreateMenu(HandleMainMenu);
 	
@@ -139,7 +157,8 @@ void generateMenu()
 	glutAddMenuEntry("Stop ([)", 1);
 	glutAddMenuEntry("Step (>)", 2);
 	glutAddMenuEntry("Clean (c)", 3);
-	//glutAddMenuEntry("Exit", 4); // This SHOULD HAVE WORKED. :/
+	glutAddMenuEntry("Fill", 4);
+	//glutAddMenuEntry("Exit", 5); // This SHOULD HAVE WORKED. :/
 
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
@@ -153,11 +172,11 @@ void HandleMainMenu(int value)
 			pause_required = false;
 			OnIdle(0);
 		}
-		else fps += 5;
+		else fps = 60;
 		break;
 	case 1:
 		pause_required = true;
-		fps = 5;
+		fps = 30;
 		break;
 	case 2:
 		if(pause_required) OnIdle(0);
@@ -167,7 +186,11 @@ void HandleMainMenu(int value)
 		table = createTable();
 		glutPostRedisplay();
 		break;
-	case 4: // This doesn't work. Why... why, GLUT?? WHY????
+	case 4:
+		createFillScreen();
+		glutPostRedisplay();
+		break;
+	case 5: // This doesn't work. Why... why, GLUT?? WHY????
 		deleteTable(table);
 		//close(0); // requires unistd.h, but I'm not using it
 		break;
@@ -425,13 +448,13 @@ void OnKeyPress(unsigned char key, int x, int y)
 		}
 		else
 		{
-			fps += 5;
+			fps = 60;
 		}
 	}
 	else if(key == '[')
 	{
 		pause_required = true;
-		fps = 5;
+		fps = 30;
 	}
 	else if(key == '>' && pause_required) OnIdle(0);
 	else if(key == 'c')
@@ -443,18 +466,34 @@ void OnKeyPress(unsigned char key, int x, int y)
 }
 
 bool mousedown = false;
+byte mousedown_type = 0;
 void OnMouseClick(int button, int state, int x, int y)
 {
+	float xpos_perc, ypos_perc;
+	xpos_perc = float(x) / float(TRUEWIDTH);
+	ypos_perc = float(y) / float(TRUEHEIGHT);
+
 	if(button == GLUT_LEFT_BUTTON)
 	{
-		float xpos_perc, ypos_perc;
-		xpos_perc = float(x) / float(TRUEWIDTH);
-		ypos_perc = float(y) / float(TRUEHEIGHT);
-
 		if(state == GLUT_DOWN)
 		{
+			mousedown_type = 0;
 			if((xpos_perc > 0.0f && xpos_perc < 1.0f) && (ypos_perc > 0.0f && ypos_perc < 1.0f))
 				table[int(xpos_perc * n_squares())][int(ypos_perc * n_squares())] = true;
+			mousedown = true;
+		}
+		else
+			mousedown = false;
+
+		glutPostRedisplay();
+	}
+	else if(button == GLUT_MIDDLE_BUTTON)
+	{
+		if(state == GLUT_DOWN)
+		{
+			mousedown_type = 1;
+			if((xpos_perc > 0.0f && xpos_perc < 1.0f) && (ypos_perc > 0.0f && ypos_perc < 1.0f))
+				table[int(xpos_perc * n_squares())][int(ypos_perc * n_squares())] = false;
 			mousedown = true;
 		}
 		else
@@ -473,7 +512,7 @@ void OnMouseMove(int x, int y)
 		ypos_perc = float(y) / float(TRUEHEIGHT);
 
 		if((xpos_perc > 0.0f && xpos_perc < 1.0f) && (ypos_perc > 0.0f && ypos_perc < 1.0f))
-			table[int(xpos_perc * n_squares())][int(ypos_perc * n_squares())] = true;
+			table[int(xpos_perc * n_squares())][int(ypos_perc * n_squares())] = (!mousedown_type ? true : false);
 		glutPostRedisplay();
 	}
 }
@@ -780,6 +819,13 @@ void createAcorn(int x, int y, int angle)
 	table[x + 5][y + 3] = true;
 	table[x + 6][y + 3] = true;
 	table[x + 7][y + 3] = true;
+}
+
+void createFillScreen()
+{
+	for(byte i = 0u; i < n_squares(); i++)
+		for(byte j = 0u; j < n_squares(); j++)
+			table[i][j] = true;
 }
 
 void createMinimalInfiniteGrowth(int x, int y, int angle)

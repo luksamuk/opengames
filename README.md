@@ -72,10 +72,9 @@ Atualmente concluído:
 - Implementação do redimensionamento da tela;
 - Atalhos de teclado;
 - Formas comuns para geração através de menu com clique direito;
-- Menu de clique direito;
+- Menu de clique direito, conciso e organizado;
+- Inserção e seleção de células com botões esquerdo e médio do mouse, respectivamente.
 
 A fazer:
 - Mais formas comuns, especialmente formas de crescimento indefinido;
-- Criar um menu mais conciso;
-- Criar um menu melhor organizado em termos de criação de formas, por categoria;
 - Encontrar uma forma de sair do jogo de forma segura.
