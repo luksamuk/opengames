@@ -5,37 +5,35 @@ Pequenos jogos de exemplo com código aberto.
 
 CBreakout
 ---------
-Clone de Breakout feito em OpenGL.
+Clone de Breakout feito em OpenGL/GLUT.
+Ainda injogável. Não sei se o continuarei, já fiz um clone
+melhor usando Processing, até então.
 Status atual:
 - Melhorar sistema de FPS;
-- Inserir objetos quebrÃ¡veis;
+- Inserir objetos quebráveis;
 - Inserir sons simples.
 
 Reversi
 -------
+
+1[CReversi](screenshots/creversi.png)
+
 Clone de Reversi feito em C e OpenGL.
 Status atual:
 - Inserir regras do jogo;
-- Inserir sistema de contagem de pontos e saÃ­da.
+- Inserir sistema de contagem de pontos e saída.
 
 CPlatformer
 -----------
-Platformer rápido feito em C, SDL e OpenGL.
-Instruções de compilação utilizando GCC / MinGW:
 
-Linux:
-gcc level.c character.c main.c -o platformer -lSDL -lGL
+![CPlatformer](screenshots/cplatformer.png)
 
-Windows:
-gcc level.c character.c main.c -o platformer.exe -lmingw32 -lSDLmain -lSDL -lopengl32
-
-Em ambos os casos, você precisará do SDL instalado em seu computador.
-No Linux, você pode instalar os pacotes libsdl1.2 e libsdl1.2-dev, e TALVEZ precisará do pacote freeglut3. Instale-os com os seu gerenciador de pacotes preferido.
-
-No Windows, além das bibliotecas de SDL e OpenGL instaladas no seu compilador, você precisará utilizar o arquivo SDL.dll incluso na pasta.
+Platformer rápido feito em C, SDL 1.2 e OpenGL/GLUT.
 
 CSonic
 ------
+
+![CSonic](screenshots/csonic.png)
 
 Engine de platformer baseada no Mega Drive/Genesis.
 Feito em C, utiliza SDL, OpenGL e GLUT.
@@ -79,4 +77,5 @@ Atualmente concluído:
 A fazer:
 - Mais formas comuns, especialmente formas de crescimento indefinido;
 - Criar um menu mais conciso;
-- Criar um menu melhor organizado em termos de criação de formas, por categoria.
+- Criar um menu melhor organizado em termos de criação de formas, por categoria;
+- Encontrar uma forma de sair do jogo de forma segura.

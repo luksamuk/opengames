@@ -10,7 +10,6 @@ ifdef SystemRoot
 
 	ICONPATH = resources\icon.bmp
 	ENDICONPATH = build\resources\icon.bmp
-	COPYSDL = copy SDL.dll build\SDL.dll
 
 	APPNAME = build\csonic.exe
 else
@@ -25,7 +24,6 @@ else
 
 	ICONPATH = resources/icon.bmp
 	ENDICONPATH = build/resources/icon.bmp
-	COPYSDL = echo "NOTE: Copy of SDL.dll is unecessary, jumping step."
 
 	APPNAME = build/csonic
 endif
@@ -36,19 +34,18 @@ BUILDDIR = build
 CFLAGS = -W -Wall -O3 -g
 
 all: mkdirs
-	@echo "> Compiling files...\n"
+	@echo "> Compiling files..."
 	gcc -o $(APPNAME) vec2.c input.c palette.c level.c main.c $(LINKS) $(CFLAGS)
-	@echo "\n> Copying resources...\n"
+	@echo "> Copying resources..."
 	@$(COPY) $(ICONPATH) $(ENDICONPATH)
-	@$(COPYSDL)
-	@echo "Done.\n"
+	@echo "Done."
 
 clean:
 	@echo "> Removing object files..."
 	@$(REMOVE) *.o
 
 mkdirs:
-	@echo "\n> Creating resource directories...\n"
+	@echo "> Creating resource directories..."
 	@$(MAKEDIR) $(BUILDDIR)
 	@cd $(BUILDDIR)
 	@$(MAKEDIR) $(RESOURCESDIR)

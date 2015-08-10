@@ -1,1 +1,8 @@
+Reversi/reversi
 CGOL/cgol
+CPlatformer/cplatformer
+CBreakout/cbreakout
+CSonic/build/csonic
+CSonic/build/data/*
+CSonic/build/resources/*
+*.o
