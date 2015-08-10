@@ -16,7 +16,7 @@ Status atual:
 Reversi
 -------
 
-1[CReversi](screenshots/creversi.png)
+![CReversi](screenshots/creversi.png)
 
 Clone de Reversi feito em C e OpenGL.
 Status atual:
