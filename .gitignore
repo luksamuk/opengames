@@ -6,3 +6,4 @@ CSonic/build/csonic
 CSonic/build/data/*
 CSonic/build/resources/*
 *.o
+*.exe
