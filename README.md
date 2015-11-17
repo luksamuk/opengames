@@ -78,3 +78,17 @@ Atualmente concluído:
 A fazer:
 - Mais formas comuns, especialmente formas de crescimento indefinido;
 - Encontrar uma forma de sair do jogo de forma segura.
+
+
+CHngmn
+------
+
+Versão própria de um jogo de forca, escrito em C++.
+
+A fazer:
+- ...tudo.
+
+DSnake-Basic
+------------
+
+Clone do jogo Snake para celulares (versão básica sem labirintos).

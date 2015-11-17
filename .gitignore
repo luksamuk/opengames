@@ -7,3 +7,4 @@ CSonic/build/data/*
 CSonic/build/resources/*
 *.o
 *.exe
+/DSnake-Basic/dsnakeb
