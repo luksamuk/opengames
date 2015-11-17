@@ -92,3 +92,11 @@ DSnake-Basic
 ------------
 
 Clone do jogo Snake para celulares (versão básica sem labirintos).
+
+A fazer:
+- Sistema de strings (copiar parcialmente da OficinaFramework);
+- Sistema básico de telas;
+- HUD básico;
+- Classes da serpente e da comida;
+- Níveis de jogo;
+- Mais detalhes a adicionar.
