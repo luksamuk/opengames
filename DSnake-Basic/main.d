@@ -1,8 +1,14 @@
+module main;
+
+// Core modules
 import std.stdio;
 import core.thread;
 import derelict.sdl2.sdl;
 import derelict.sdl2.mixer;
 import derelict.opengl3.gl;
+
+// Game modules
+import game.screenmanager;
 
 SDL_Window* window;
 SDL_GLContext glContext;
