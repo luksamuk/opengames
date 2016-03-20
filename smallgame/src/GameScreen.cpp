@@ -1,4 +1,8 @@
 #include "GameScreen.hpp"
+#include <string>
+#include <sstream>
+#include <cstdlib>
+#include <ctime>
 using namespace OficinaFramework;
 using namespace SmallGame;
 
@@ -7,34 +11,36 @@ void GameScreen::Initialize()
 {
     SetActive(true);
     SetVisible(true);
-    m_gameblock = new GameBlock(RenderingSystem::GetViewportSize().toVec2() / 2.0f);
-    m_gameblock->Init();
+    m_drawables = new EntitySystem::DrawableEntityCollection;
+    m_drawables->Init();
+    srand(time(NULL));
     ScreenSystem::Screen::Initialize();
 }
 
 void GameScreen::LoadContent()
 {
-    m_gameblock->LoadContent();
+    for(int i = 0; i < 5; i++)
+        m_drawables->Add("RotatingBlock", new GameBlock(vec2(100.0f + (150.0f * i), 300.0f)));
+
+    m_drawables->LoadContent();
     ScreenSystem::Screen::LoadContent();
 }
 
 void GameScreen::UnloadContent()
 {
-    m_gameblock->UnloadContent();
-    delete m_gameblock;
-    m_gameblock = nullptr;
+    m_drawables->UnloadContent();
     ScreenSystem::Screen::UnloadContent();
 }
 
 void GameScreen::Update()
 {
-    m_gameblock->Update();
+    m_drawables->Update();
 }
 
 void GameScreen::Draw()
 {
     glPushMatrix();
-        m_gameblock->Draw();
+        m_drawables->Draw();
     glPopMatrix();
 }
 
@@ -64,16 +70,23 @@ void GameBlock::UnloadContent()
 
 void GameBlock::Update()
 {
-    angle = angle >= 360.0f ? 0.0f : angle + 5.0f;
+    angle = angle >= 360.0f ? 0.0f : angle + (rand() % 5) + 1.0f;
+    std::stringstream ss;
+    ss.clear();
+    ss << "Obj RotatingBlock pos: " << position << " ang: " << angle;
+
+    ScreenSystem::Debug_AddLine(ss.str());
 }
 
 void GameBlock::Draw()
 {
-    glTranslatef(position.x, position.y, 0.0f);
-    glRotatef(angle, 0.0f, 0.0f, 1.0f);
     glPushMatrix();
-        vec2 halfSize = size / 2.0f;
-        glTranslatef(-halfSize.x, -halfSize.y, 0.0f);
-        m_blocktexture->Draw(vec2::Zero(), size, Color4::MaskToColor4(ColorDef::WHITE));
+        glTranslatef(position.x, position.y, 0.0f);
+        glRotatef(angle, 0.0f, 0.0f, 1.0f);
+        glPushMatrix();
+            vec2 halfSize = size / 2.0f;
+            glTranslatef(-halfSize.x, -halfSize.y, 0.0f);
+            m_blocktexture->Draw(vec2::Zero(), size, Color4::MaskToColor4(ColorDef::WHITE));
+        glPopMatrix();
     glPopMatrix();
 }

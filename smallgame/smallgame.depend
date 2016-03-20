@@ -8,9 +8,13 @@
 1458435265 /home/lucas/Documents/Git/opengames/smallgame/src/AppScreens.hpp
 	"GameScreen.hpp"
 
-1458437976 /home/lucas/Documents/Git/opengames/smallgame/src/GameScreen.hpp
+1458482893 /home/lucas/Documents/Git/opengames/smallgame/src/GameScreen.hpp
 	<OficinaFramework/OficinaFramework.h>
 
-1458438692 source:/home/lucas/Documents/Git/opengames/smallgame/src/GameScreen.cpp
+1458484274 source:/home/lucas/Documents/Git/opengames/smallgame/src/GameScreen.cpp
 	"GameScreen.hpp"
+	<string>
+	<sstream>
+	<cstdlib>
+	<ctime>
 

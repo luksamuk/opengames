@@ -27,7 +27,7 @@ namespace SmallGame
     class GameScreen : public ScreenSystem::Screen
     {
     private:
-        GameBlock* m_gameblock = nullptr;
+        EntitySystem::DrawableEntityCollection* m_drawables = nullptr;
     public:
         void Initialize()    override;
         void LoadContent()   override;
