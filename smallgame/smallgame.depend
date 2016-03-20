@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1458437685 source:/home/lucas/Documents/Git/opengames/smallgame/src/main.cpp
+	<OficinaFramework/OficinaFramework.h>
+	<string>
+	<list>
+	"AppScreens.hpp"
+
+1458435265 /home/lucas/Documents/Git/opengames/smallgame/src/AppScreens.hpp
+	"GameScreen.hpp"
+
+1458437976 /home/lucas/Documents/Git/opengames/smallgame/src/GameScreen.hpp
+	<OficinaFramework/OficinaFramework.h>
+
+1458438692 source:/home/lucas/Documents/Git/opengames/smallgame/src/GameScreen.cpp
+	"GameScreen.hpp"
+
