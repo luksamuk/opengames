@@ -295,7 +295,7 @@
   (setf *last-fps-message-time* (sdl2:get-ticks))
 
   ;; Init snake
-  (init-object *snake*))
+  (init-snake *snake*))
 
 (defun update-fps ()
   (incf *frame-count*)
@@ -316,7 +316,7 @@
 
 (defun update (delta-t)
   (if *running*
-      (update-object *snake* delta-t))
+      (update-snake *snake* delta-t))
   (update-fps)
   
   ;; Change angle
@@ -327,7 +327,7 @@
 
 (defun draw()
   (gl:clear :color-buffer)
-  (draw-object *snake*)
+  (draw-snake *snake*)
   (sdl2:gl-swap-window *window*))
 
 (defun main-loop ()
