@@ -88,8 +88,8 @@ Versão própria de um jogo de forca, escrito em C++.
 A fazer:
 - ...tudo.
 
-DSnake-Basic
-------------
+dsnakeb
+-------
 
 Clone do jogo Snake para celulares (versão básica sem labirintos).
 
@@ -100,3 +100,14 @@ A fazer:
 - Classes da serpente e da comida;
 - Níveis de jogo;
 - Mais detalhes a adicionar.
+
+
+
+cl-snake
+--------
+
+Mais um clone de Snake, porém feito em Common Lisp.
+
+Usa SDL2 e OpenGL via Quicklisp.
+Otimizado para Emacs + SLIME.
+
