@@ -78,7 +78,7 @@
 ;; - Hardest Mode: 50 pieces per second
 (defparameter *snake-speed* 15)
 ;; Starting number of snake pieces
-(defparameter *snake-init-num-pieces* 10)
+(defparameter *snake-init-num-pieces* 2)
 ;; Update interval: speed-related.
 ;; Calculated before each frame.
 (defparameter *snake-update-interval* 0)
@@ -117,9 +117,6 @@
 (defgeneric draw-snake (snake)
   (:documentation "Draws an object on screen."))
 
-(defgeneric add-piece-snake (snake)
-  (:documentation "Adds a new piece to the snake."))
-
 
 (defmethod init-snake ((thesnake snake))
   ;; Spawn fruit
@@ -149,9 +146,11 @@
     (< (+ (* delta-x delta-x) (* delta-y delta-y))
 	(* sum-of-radius sum-of-radius))))
 
-(defmethod add-piece-snake ((thesnake snake))
-  
-  )
+(defun is-overlapping-snake (fst thesnake)
+  (loop for x in (piece-list thesnake)
+       do (if (is-overlapping-piece fst x)
+	      (return t)))
+  nil)
 
 (defmethod update-snake ((thesnake snake) delta-t)
   ;; Calculate snake walk ratio
@@ -257,9 +256,14 @@
     (set-append (make-vec2 :x (vec2-x *fruit-position*)
 			   :y (vec2-y *fruit-position*))
 		(fruit-list thesnake))
-    ;; Reset fruit position (TO-DO!)
-    (setf *fruit-position* (make-vec2 :x -30.0 :y -30.0)) ; out of screen
-    )
+    ;; Reset fruit position
+    (loop do
+	 (setf *fruit-position*
+	       (make-vec2 :x (float (* (+ (random (- (/ *window-width* *snake-piece-size*) 1)) 1)
+				*snake-piece-size*))
+		          :y (float (* (+ (random (- (/ *window-height* *snake-piece-size*) 1)) 1)
+				*snake-piece-size*))))
+       while (is-overlapping-snake *fruit-position* thesnake)))
   
   ;; Grow after eating
   ;; Tail's last piece is always the first on our piece-list
@@ -301,7 +305,7 @@
 	 (incf i))))
 
 
-
+;; The actual snake instance!
 (defparameter *snake* (make-instance 'snake))
 
 
@@ -322,6 +326,7 @@
   (format t "===SNAKE GAME===~%")
   (setf *frame-count* 0)
   (setf *last-fps-message-time* (sdl2:get-ticks))
+  (setf *random-state* (make-random-state t))
 
   ;; Init snake
   (init-snake *snake*))
