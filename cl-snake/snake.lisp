@@ -55,37 +55,8 @@
 (defparameter *fps-message-interval* 2000)
 (defparameter *fps* 0)
 
-
-
-;; Snake piece size
-(defvar *snake-piece-size* 20)
-(defvar *snake-piece-half-size*
-  (/ *snake-piece-size* 2.0))
-;; @ 60hz, the snake should walk:
-;; - Easiest Mode: 1 piece per second
-;; - Easy Mode: 5 pieces per second
-;; - Medium Mode: 10 pieces per second
-;; - Hard Mode: 25 pieces per second
-;; - Hardest Mode: 50 pieces per second
-(defparameter *snake-speed* 10)
-;; Starting number of snake pieces
-(defparameter *snake-init-num-pieces* 3)
-;; Update interval: speed-related.
-;; Calculated before each frame.
-(defparameter *snake-update-interval* 0)
-;; Last movement frame footprint
-(defparameter *last-snake-update* 0)
-;; Last movement footprint.
-;; Prevents movement between movement frames
-(defparameter *has-snake-moved* nil)
-
 (defmacro set-append (item mylist)
   `(setf ,mylist (append ,mylist (list ,item))))
-
-(defmacro copy-vec (dest orig)
-  `(progn
-     (setf (vec2-x ,dest) (vec2-x ,orig))
-     (setf (vec2-y ,dest) (vec2-y ,orig))))
 
 ;; Vec2
 (defstruct vec2
@@ -94,8 +65,35 @@
 
 
 
-;; Snake stuff
+;;; Snake stuff
 
+;; Snake piece size
+(defvar *snake-piece-size* 20)
+(defvar *snake-piece-half-size* (/ *snake-piece-size* 2.0))
+;; @ 60hz, the snake should walk:
+;; - Easiest Mode: 1 piece per second
+;; - Easy Mode: 5 pieces per second
+;; - Medium Mode: 15 pieces per second
+;; - Hard Mode: 25 pieces per second
+;; - Hardest Mode: 50 pieces per second
+(defparameter *snake-speed* 15)
+;; Starting number of snake pieces
+(defparameter *snake-init-num-pieces* 10)
+;; Update interval: speed-related.
+;; Calculated before each frame.
+(defparameter *snake-update-interval* 0)
+;; Last movement frame footprint
+(defparameter *last-snake-update* 0)
+;; Last movement footprint.
+;; Prevents movement between movement frames
+(defparameter *has-snake-moved* nil)
+;; For eating order
+(defparameter *has-snake-eaten* nil)
+
+;; Fruit stuff
+(defparameter *fruit-position* (make-vec2))
+
+;; Snake class
 (defclass snake ()
   ((pos :initform (make-vec2
 		   :x (/ *window-width* 2.0)
@@ -105,7 +103,10 @@
    (spd :initform 5.0 :accessor spd) ;; pixels on current frame
    (piece-list
     :initform nil
-    :accessor piece-list)))
+    :accessor piece-list)
+   (fruit-list
+    :initform nil
+    :accessor fruit-list)))
 
 (defgeneric init-snake (snake)
   (:documentation "Initializes an object on screen."))
@@ -121,6 +122,11 @@
 
 
 (defmethod init-snake ((thesnake snake))
+  ;; Spawn fruit
+  (setf *fruit-position*
+	(make-vec2 :x (* 3 (/ *window-width* 4.0))
+		   :y (/ *window-height* 16.0)))
+  ;; Spawn first pieces
   (loop for x from 0 to *snake-init-num-pieces*
      do (push (make-vec2 :x (- (/ *window-width* 2.0)
 			       (* *snake-piece-size* x))
@@ -130,18 +136,18 @@
 
 
 (defun is-overlapping-piece (fst snd)
-  ;; Define various edges
-  ;; First block
-
-  ;; Actually, all the pieces are CIRCLES :)
-  ;; So we actually calculate distance between points
-  ;;(format t "~a vs ~a~%" fst snd)
-
-  (let ((delta-x (abs (- (vec2-x fst) (vec2-x snd))))
-	(delta-y (abs (- (vec2-y fst) (vec2-y snd)))))
-    ;;(format t "DeltaX: ~a, DeltaY: ~a~%" delta-x delta-y)
-    (and (zerop delta-x) (zerop delta-y))
-    ))
+  (let ((delta-x (- (vec2-x fst) (vec2-x snd)))
+	(delta-y (- (vec2-y fst) (vec2-y snd)))
+	(sum-of-radius (* *snake-piece-half-size* 2)))
+    ;; We consider each snake piece as a circle and
+    ;; compare if the circle is overlapping another.
+    ;; Since sqrt can be expensive, we just compare
+    ;; square values.
+    ;; Of course, since the pieces are so tightly
+    ;; positioned, weneed to ignore when the distance
+    ;; matches the sum of radiuses.
+    (< (+ (* delta-x delta-x) (* delta-y delta-y))
+	(* sum-of-radius sum-of-radius))))
 
 (defmethod add-piece-snake ((thesnake snake))
   
@@ -189,7 +195,12 @@
 			     :y (vec2-y (pos thesnake)))
 		  (piece-list thesnake))
       ;; Also remove first piece
-      (pop (piece-list thesnake))
+      ;; But only if the snake is not supposed to
+      ;; grow in size
+      (if (not *has-snake-eaten*)
+	  (pop (piece-list thesnake))
+	  ;; Else just reset its eating state
+	  (setf *has-snake-eaten* nil))
       ;; Allow snake to move next frame
       (setf *has-snake-moved* nil)))
   
@@ -223,7 +234,7 @@
 	      (setf *has-snake-moved* t)))))
 
 
-  ;;; Collision detection
+  ;; Collision detection
   ;; With own tail
   ;; So basically we'll only have to do that for the head.
   ;; Just iterate and check if overlapping a piece of your own tail.
@@ -236,13 +247,31 @@
 		  (is-overlapping-piece (pos thesnake) snake-piece))
 	     ;; TO-DO: Game Over
 	     (progn
-	       (format t "Collision: piece #~a~%" i)
+	       (format t "Snake collided with tail @ piece #~a~%" (- max-piece i))
 	       (setf *running* nil)))
 	 (incf i)))
 
   ;; With fruit
-  ;; TO-DO
-  )
+  (when (is-overlapping-piece (pos thesnake) *fruit-position*)
+    ;; Add fruit position to end of growth list
+    (set-append (make-vec2 :x (vec2-x *fruit-position*)
+			   :y (vec2-y *fruit-position*))
+		(fruit-list thesnake))
+    ;; Reset fruit position (TO-DO!)
+    (setf *fruit-position* (make-vec2 :x -30.0 :y -30.0)) ; out of screen
+    )
+  
+  ;; Grow after eating
+  ;; Tail's last piece is always the first on our piece-list
+  (when (fruit-list thesnake)
+    (if (is-overlapping-piece (car (fruit-list thesnake))
+			      (car (piece-list thesnake)))
+	;; Just don't remove the last piece when
+	;; walking! Voila!
+	;; But do remove the fruit from fruit list.
+	(progn
+	  (pop (fruit-list thesnake))
+	  (setf *has-snake-eaten* t)))))
 	
 
   
@@ -260,10 +289,10 @@
 
 
 (defmethod draw-snake ((thesnake snake))
+  ;; Draw fruit
+  (gl:color 0.5 0.2 0.3)
+  (draw-snake-piece *fruit-position*)
   ;; Draw snake
-  ;;(draw-snake-piece (pos thesnake))
-  ;; Draw snake pieces
-  ;;(format t "Snake position: ~a~%" (pos thesnake))
   (gl:color 0.3 0.2 0.5)
   (let ((i 0))
     (loop for piece in (piece-list thesnake)
