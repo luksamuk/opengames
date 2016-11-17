@@ -12,3 +12,4 @@ CSonic/build/resources/*
 
 *.fasl
 *~
+\#*\#
