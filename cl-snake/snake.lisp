@@ -93,6 +93,9 @@
 ;; Fruit stuff
 (defparameter *fruit-position* (make-vec2))
 
+;; Player stuff
+(defparameter *player-score* 0)
+
 ;; Snake class
 (defclass snake ()
   ((pos :initform (make-vec2
@@ -247,6 +250,7 @@
 	     ;; TO-DO: Game Over
 	     (progn
 	       (format t "Snake collided with tail @ piece #~a~%" (- max-piece i))
+	       (format t "Final score: ~apts.~%" *player-score*)
 	       (setf *running* nil)))
 	 (incf i)))
 
@@ -256,6 +260,8 @@
     (set-append (make-vec2 :x (vec2-x *fruit-position*)
 			   :y (vec2-y *fruit-position*))
 		(fruit-list thesnake))
+    ;; Add to score
+    (incf *player-score*)
     ;; Reset fruit position
     (loop do
 	 (setf *fruit-position*
@@ -276,33 +282,110 @@
 	(progn
 	  (pop (fruit-list thesnake))
 	  (setf *has-snake-eaten* t)))))
-	
 
-  
+
+
 
 
 (defun draw-snake-piece (pos)
   (gl:with-pushed-matrix
     (gl:translate (vec2-x pos) (vec2-y pos) 0.0)
+    (gl:color 0.3 0.2 0.5)
     (gl:with-primitive :quads
       (gl:vertex (- *snake-piece-half-size*) (- *snake-piece-half-size*))
       (gl:vertex *snake-piece-half-size* (- *snake-piece-half-size*))
       (gl:vertex *snake-piece-half-size* *snake-piece-half-size*)
       (gl:vertex (- *snake-piece-half-size*) *snake-piece-half-size*))
+    ;; Small point in the center of the piece, for style
+    (gl:color 0.5 0.3 0.6)
+    (gl:with-primitive :polygon
+	(loop for x from 0 to 360 by 5
+	   do (gl:vertex (* 2 (cos x))
+			 (* 2 (sin x)))))
+    (gl:flush)))
+
+(defun draw-snake-head (pos angle)
+  (gl:with-pushed-matrix
+    (gl:translate (vec2-x pos) (vec2-y pos) 0.0)
+    (gl:rotate angle 0.0 0.0 1.0)
+    (gl:color 0.3 0.2 0.5)
+    (gl:with-primitive :polygon
+      ;; Left vertices
+      (gl:vertex 0.0 *snake-piece-half-size*)
+      (gl:vertex (- *snake-piece-half-size*) *snake-piece-half-size*)
+      (gl:vertex (- *snake-piece-half-size*)  (- *snake-piece-half-size*))
+      (gl:vertex 0.0 (- *snake-piece-half-size*))
+      ;; Right arc
+      (loop for x from -90 to 90 by 5
+	 do (gl:vertex (* *snake-piece-half-size* (cos x))
+		       (* *snake-piece-half-size* (sin x)))))
+    ;; Eyes
+    (gl:color 0.6 0.6 0.6)
+    (gl:with-pushed-matrix
+      (gl:translate (/ *snake-piece-half-size* 2.0)
+		    (- (/ *snake-piece-half-size* 2.0))
+		    0.0)
+      (gl:with-primitive :polygon
+	(loop for x from 0 to 360 by 5
+	   do (gl:vertex (* 2 (cos x))
+			 (* 2 (sin x))))))
+    (gl:with-pushed-matrix
+      (gl:translate (/ *snake-piece-half-size* 2.0)
+		    (/ *snake-piece-half-size* 2.0)
+		    0.0)
+      (gl:with-primitive :polygon
+	(loop for x from 0 to 360 by 5
+	   do (gl:vertex (* 2 (cos x))
+			 (* 2 (sin x))))))
     (gl:flush)))
 
 
+(defun draw-fruit-leaf ()
+  (let ((snake-piece-quarter-size
+	 (/ *snake-piece-half-size* 2.0)))
+  (gl:with-pushed-matrix
+    (gl:translate 0.0
+		  (- snake-piece-quarter-size)
+		  0.0)
+    (gl:with-primitive :polygon
+      (loop for x from 0 to 360 by 5
+	 do (gl:vertex (* 2 (cos x))
+		       (* snake-piece-quarter-size
+			  (sin x))))))))
+
+(defun draw-fruit (pos)
+  (gl:with-pushed-matrix
+    (gl:translate (vec2-x pos) (vec2-y pos) 0.0)
+    (gl:color 0.5 0.2 0.3)
+    (gl:with-primitive :polygon
+      (loop for x from 0 to 360 by 5
+	 do (gl:vertex (* *snake-piece-half-size* (cos x))
+		       (* *snake-piece-half-size* (sin x)))))
+    ;; Leaves
+    (gl:translate 0.0 (- *snake-piece-half-size*) 0.0)
+    (gl:color 0.2 0.5 0.2)
+    (draw-fruit-leaf)
+    (gl:rotate 45.0 0.0 0.0 1.0)
+    (draw-fruit-leaf)
+  (gl:flush)))
+
+(defun figure-angle-from-direction (dir)
+  (if (not (zerop (vec2-x dir)))
+      (if (minusp (vec2-x dir)) 180.0 0.0)
+      (if (minusp (vec2-y dir)) 270.0 90.0)))
+
 (defmethod draw-snake ((thesnake snake))
   ;; Draw fruit
-  (gl:color 0.5 0.2 0.3)
-  (draw-snake-piece *fruit-position*)
+  (draw-fruit *fruit-position*)
   ;; Draw snake
-  (gl:color 0.3 0.2 0.5)
-  (let ((i 0))
+  (let ((i (- (list-length (piece-list thesnake)) 1)))
     (loop for piece in (piece-list thesnake)
-       do (draw-snake-piece piece)
+       do (if (zerop i)
+	      (draw-snake-head piece
+			       (figure-angle-from-direction (dir thesnake)))
+	      (draw-snake-piece piece))
 	 ;;(format t "Piece #~a : ~s~%" i piece)
-	 (incf i))))
+	 (decf i))))
 
 
 ;; The actual snake instance!
@@ -311,7 +394,7 @@
 
 (defun setup-view ()
   ;; Disable VSync
-  (sdl2:gl-set-swap-interval 0)
+  ;;(sdl2:gl-set-swap-interval 0)
 
   ;; Setup viewport and ortographic view
   (gl:viewport 0 0 *window-width* *window-height*)
