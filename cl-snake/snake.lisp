@@ -32,6 +32,7 @@
 (defparameter *gl-context* nil)
 (defparameter *window-width* 960)
 (defparameter *window-height* 540)
+(defparameter *game-controllers* nil)
 (defparameter *angle* 0.0)
 (defparameter *running* t)
 
@@ -316,7 +317,7 @@
       (gl:vertex (- *snake-piece-half-size*)  (- *snake-piece-half-size*))
       (gl:vertex 0.0 (- *snake-piece-half-size*))
       ;; Right arc
-      (loop for x from -90 to 90 by 5
+      (loop for x from -90 upto 90 by 5
 	 do (gl:vertex (* *snake-piece-half-size* (cos x))
 		       (* *snake-piece-half-size* (sin x)))))
     ;; Eyes
@@ -348,7 +349,7 @@
 		  (- snake-piece-quarter-size)
 		  0.0)
     (gl:with-primitive :polygon
-      (loop for x from 0 to 360 by 5
+      (loop for x from 0 upto 360 by 5
 	 do (gl:vertex (* 2 (cos x))
 		       (* snake-piece-quarter-size
 			  (sin x))))))))
@@ -358,7 +359,7 @@
     (gl:translate (vec2-x pos) (vec2-y pos) 0.0)
     (gl:color 0.5 0.2 0.3)
     (gl:with-primitive :polygon
-      (loop for x from 0 to 360 by 5
+      (loop for x from 0 upto 360 by 5
 	 do (gl:vertex (* *snake-piece-half-size* (cos x))
 		       (* *snake-piece-half-size* (sin x)))))
     ;; Leaves
@@ -411,6 +412,17 @@
   (setf *last-fps-message-time* (sdl2:get-ticks))
   (setf *random-state* (make-random-state t))
 
+  ;; Init game controllers
+  (loop for i from 0 upto (- (sdl2:joystick-count) 1)
+     do (when (sdl2:game-controller-p i)
+	  (format t "Found gamepad: ~a~%"
+		  (sdl2:game-controller-name-for-index i))
+	  ;; Will only be fetching the controllers.
+	  ;; Won't get joysticks because haptic systems
+	  ;; are not important right now
+	  (let ((controller (sdl2:game-controller-open i)))
+	    (setf *game-controllers* (acons i controller *game-controllers*)))))
+  
   ;; Init snake
   (init-snake *snake*))
 
@@ -434,13 +446,7 @@
 (defun update (delta-t)
   (if *running*
       (update-snake *snake* delta-t))
-  (update-fps)
-  
-  ;; Change angle
-  ;;(incf *angle* 0.5)
-  ;;(if (> *angle* 360.0)
-  ;;    (decf *angle* 360.0))
-  )
+  (update-fps))
 
 (defun draw()
   (gl:clear :color-buffer)
@@ -448,7 +454,7 @@
   (sdl2:gl-swap-window *window*))
 
 (defun main-loop ()
-  (sdl2:with-init (:video)
+  (sdl2:with-init (:video :joystick)
     (setf *window* (sdl2:create-window
 		    :title "Lisp Snake"
 		    :x (- 1820 (round (* *window-width* 1)))
@@ -497,19 +503,28 @@
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-return)
 		    (setf (input-values-restart *input-state*) t)))
 	
-	(:controlleraxismotion (:which controller-id :axis axis-id :value value)
-			       (when (= controller-id 0)
-				 (when (= axis-id 0) ;; Horizontal axis
-				   (format t "Axis value: ~a~%" value)
-				   (setf (input-values-left *input-state*) nil)
-				   (setf (input-values-right *input-state*) nil)
-				   (cond
-				     ((< value 0)
-				      (setf (input-values-left *input-state*) t))
-				     ((> value 0)
-				      (setf (input-values-right *input-state*) t))))
-				 ;;to-do
-				  ))
+	(:joyaxismotion (:which controller-id :axis axis-id :value value)
+			(when (= controller-id 0)
+			  (cond ((= axis-id 0) ;; Horizontal axis
+				 (setf (input-values-left *input-state*) nil)
+				 (setf (input-values-right *input-state*) nil)
+				 (cond
+				   ((<= value -32767)
+				    (setf (input-values-left *input-state*) t))
+				   ((>= value 32767)
+				    (setf (input-values-right *input-state*) t))))
+				((= axis-id 1)
+				 (setf (input-values-up *input-state*) nil)
+				 (setf (input-values-down *input-state*) nil)
+				 (cond
+				   ((<= value -32767)
+				    (setf (input-values-up *input-state*) t))
+				   ((>= value 32767)
+				    (setf (input-values-down *input-state*) t)))))))
+
+	(:joybuttondown (:which controller-id :button button-id)
+			(format t "Controller button down: Controller: ~a, Button: ~a~%"
+				controller-id button-id))
 	
 	(:idle ()
 	       #+(and sbcl (not sb-thread))
@@ -523,6 +538,12 @@
 		 (loop for i in *next-frame-hook*
 		    do (funcall i))
 		 (setf *next-frame-hook* nil))))
+
+      ;; Delete game controllers
+      (loop for (i . controller) in *game-controllers*
+	 do (sdl2:game-controller-close controller))
+      
+      ;; Delete context and window
       (sdl2:gl-delete-context *gl-context*)
       (sdl2:destroy-window *window*))))
 
