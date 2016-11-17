@@ -106,6 +106,8 @@ A fazer:
 cl-snake
 --------
 
+![cl-snake](screenshots/cl-snake.png)
+
 Mais um clone de Snake, porém feito em Common Lisp.
 
 Usa SDL2 e OpenGL via Quicklisp.
