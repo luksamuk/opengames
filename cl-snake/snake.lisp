@@ -33,7 +33,6 @@
 (defparameter *window-width* 960)
 (defparameter *window-height* 540)
 (defparameter *game-controllers* nil)
-(defparameter *angle* 0.0)
 (defparameter *running* t)
 
 
@@ -43,10 +42,35 @@
   (down nil :type boolean)
   (left nil :type boolean)
   (right nil :type boolean)
-  (restart nil :type boolean))
+  (start nil :type boolean)
+  (back nil :type boolean))
 
 ;; Input info
 (defparameter *input-state* (make-input-values))
+(defparameter *old-input-state* (make-input-values))
+
+(defun has-pressed (button)
+  (case button
+    (:btn-up
+     (and (input-values-up *input-state*)
+	  (not (input-values-up *old-input-state*))))
+    (:btn-down
+     (and (input-values-down *input-state*)
+	  (not (input-values-down *old-input-state*))))
+    (:btn-left
+     (and (input-values-left *input-state*)
+	  (not (input-values-left *old-input-state*))))
+    (:btn-right
+     (and (input-values-right *input-state*)
+	  (not (input-values-right *old-input-state*))))
+    (:btn-start
+     (and (input-values-start *input-state*)
+	  (not (input-values-start *old-input-state*))))
+    (:btn-back
+     (and (input-values-back *input-state*)
+	  (not (input-values-back *old-input-state*))))))
+
+
 
 
 ;; Framerate Stuff
@@ -113,16 +137,23 @@
     :accessor fruit-list)))
 
 (defgeneric init-snake (snake)
-  (:documentation "Initializes an object on screen."))
+  (:documentation "Initializes or redefines snake and game values."))
 
 (defgeneric update-snake (snake delta-t)
-  (:documentation "Updates an object on screen."))
+  (:documentation "Updates the snake."))
 
 (defgeneric draw-snake (snake)
-  (:documentation "Draws an object on screen."))
+  (:documentation "Draws the snake."))
 
 
 (defmethod init-snake ((thesnake snake))
+  (setf (pos thesnake) (make-vec2
+		   :x (/ *window-width* 2.0)
+		   :y (/ *window-height* 2.0)))
+  (setf (piece-list thesnake) nil)
+  (setf (fruit-list thesnake) nil)
+  (setf (dir thesnake) (make-vec2 :x 1.0))
+  (setf *player-score* 0)
   ;; Spawn fruit
   (setf *fruit-position*
 	(make-vec2 :x (* 3 (/ *window-width* 4.0))
@@ -252,7 +283,9 @@
 	     (progn
 	       (format t "Snake collided with tail @ piece #~a~%" (- max-piece i))
 	       (format t "Final score: ~apts.~%" *player-score*)
-	       (setf *running* nil)))
+	       ;;(setf *running* nil)
+	       (init-snake thesnake)
+	       ))
 	 (incf i)))
 
   ;; With fruit
@@ -415,8 +448,7 @@
   ;; Init game controllers
   (loop for i from 0 upto (- (sdl2:joystick-count) 1)
      do (when (sdl2:game-controller-p i)
-	  (format t "Found gamepad: ~a~%"
-		  (sdl2:game-controller-name-for-index i))
+	  ;;(format t "Found gamepad: ~a~%" (sdl2:game-controller-name-for-index i))
 	  ;; Will only be fetching the controllers.
 	  ;; Won't get joysticks because haptic systems
 	  ;; are not important right now
@@ -425,6 +457,7 @@
   
   ;; Init snake
   (init-snake *snake*))
+
 
 (defun update-fps ()
   (incf *frame-count*)
@@ -443,15 +476,40 @@
     (setf *last-fps-message-time* (sdl2:get-ticks))
     (setf *last-fps-message-frame-count* *frame-count*)))
 
+
+(defun update-input ()
+  ;;(format t "Current:~%~a~%Old:~%~a~%~%" *input-state* *old-input-state*)
+
+  ;; Pause game
+  (when (has-pressed :btn-start)
+    (setf *running* (not *running*))
+    (if (not *running*)
+	(format t "Game Paused~%")
+	(format t "Continuing game~%")))
+
+  ;; Quit game (Esc or Back)
+  (when (has-pressed :btn-back)
+    ;; Do not use sdl2:quit if you're
+    ;; gonna keep the REPL open, seriously.
+    ;; Just use SDL2's events.
+    (sdl2:push-quit-event))
+  
+  ;; Update old state after processing
+  (setf *old-input-state* (copy-structure *input-state*)))
+
+
 (defun update (delta-t)
   (if *running*
       (update-snake *snake* delta-t))
-  (update-fps))
+  (update-fps)
+  (update-input))
+
 
 (defun draw()
   (gl:clear :color-buffer)
   (draw-snake *snake*)
   (sdl2:gl-swap-window *window*))
+
 
 (defun main-loop ()
   (sdl2:with-init (:video :joystick)
@@ -489,7 +547,9 @@
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-right)
 		    (setf (input-values-right *input-state*) nil))
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-return)
-		    (setf (input-values-restart *input-state*) nil)))
+		    (setf (input-values-start *input-state*) nil))
+		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-escape)
+		    (setf (input-values-back *input-state*) nil)))
 	
 	(:keydown (:keysym keysym)
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-up)
@@ -501,11 +561,13 @@
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-right)
 		    (setf (input-values-right *input-state*) t))
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-return)
-		    (setf (input-values-restart *input-state*) t)))
+		    (setf (input-values-start *input-state*) t))
+		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-escape)
+		    (setf (input-values-back *input-state*) t)))
 	
 	(:joyaxismotion (:which controller-id :axis axis-id :value value)
 			(when (= controller-id 0)
-			  (cond ((= axis-id 0) ;; Horizontal axis
+			  (cond ((= axis-id 0) ; Horizontal axis
 				 (setf (input-values-left *input-state*) nil)
 				 (setf (input-values-right *input-state*) nil)
 				 (cond
@@ -513,7 +575,8 @@
 				    (setf (input-values-left *input-state*) t))
 				   ((>= value 32767)
 				    (setf (input-values-right *input-state*) t))))
-				((= axis-id 1)
+				
+				((= axis-id 1) ; Vertical axis
 				 (setf (input-values-up *input-state*) nil)
 				 (setf (input-values-down *input-state*) nil)
 				 (cond
@@ -522,9 +585,45 @@
 				   ((>= value 32767)
 				    (setf (input-values-down *input-state*) t)))))))
 
+
+	
 	(:joybuttondown (:which controller-id :button button-id)
-			(format t "Controller button down: Controller: ~a, Button: ~a~%"
-				controller-id button-id))
+			;;(format t "Button: ~a~%" button-id)
+			(when (= controller-id 0)
+			  (when (= button-id 13)
+			    (setf (input-values-up *input-state*) t))
+			  (when (= button-id 14)
+			    (setf (input-values-down *input-state*) t))
+			  (when (= button-id 11)
+			    (setf (input-values-left *input-state*) t))
+			  (when (= button-id 12)
+			    (setf (input-values-right *input-state*) t))
+			  (when (= button-id 7)
+			    (setf (input-values-start *input-state*) t))
+			  (when (= button-id 6)
+			    (setf (input-values-back *input-state*) t))))
+
+	
+	(:joybuttonup (:which controller-id :button button-id)
+			(when (= controller-id 0)
+			  (when (= button-id 13)
+			    (setf (input-values-up *input-state*) nil))
+			  (when (= button-id 14)
+			    (setf (input-values-down *input-state*) nil))
+			  (when (= button-id 11)
+			    (setf (input-values-left *input-state*) nil))
+			  (when (= button-id 12)
+			    (setf (input-values-right *input-state*) nil))
+			  (when (= button-id 7)
+			    (setf (input-values-start *input-state*) nil))
+			  (when (= button-id 6)
+			    (setf (input-values-back *input-state*) nil))))
+
+	
+	(:joyhatmotion (:which controller-id :hat hat :value value)
+		       (format t
+			       "Controller hat: Controller: ~a, Hat: ~a, Value: ~a~%"
+			       controller-id hat value))
 	
 	(:idle ()
 	       #+(and sbcl (not sb-thread))
