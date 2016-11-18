@@ -538,6 +538,7 @@
       (sdl2:with-event-loop (:method :poll)
 	(:quit () t)
 	(:keyup (:keysym keysym)
+		;; Arrows
 		(when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-up)
 		    (setf (input-values-up *input-state*) nil))
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-down)
@@ -546,12 +547,23 @@
 		    (setf (input-values-left *input-state*) nil))
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-right)
 		    (setf (input-values-right *input-state*) nil))
+		  ;; WASD
+		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-w)
+		    (setf (input-values-up *input-state*) nil))
+		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-s)
+		    (setf (input-values-down *input-state*) nil))
+		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-a)
+		    (setf (input-values-left *input-state*) nil))
+		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-d)
+		    (setf (input-values-right *input-state*) nil))
+		  ;; Enter, Esc
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-return)
 		    (setf (input-values-start *input-state*) nil))
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-escape)
 		    (setf (input-values-back *input-state*) nil)))
 	
 	(:keydown (:keysym keysym)
+		  ;; Arrows
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-up)
 		    (setf (input-values-up *input-state*) t))
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-down)
@@ -560,6 +572,16 @@
 		    (setf (input-values-left *input-state*) t))
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-right)
 		    (setf (input-values-right *input-state*) t))
+		  ;; WASD
+		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-w)
+		    (setf (input-values-up *input-state*) t))
+		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-s)
+		    (setf (input-values-down *input-state*) t))
+		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-a)
+		    (setf (input-values-left *input-state*) t))
+		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-d)
+		    (setf (input-values-right *input-state*) t))
+		  ;; Enter, Esc
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-return)
 		    (setf (input-values-start *input-state*) t))
 		  (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-escape)

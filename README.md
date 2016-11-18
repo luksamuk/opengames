@@ -113,3 +113,7 @@ Mais um clone de Snake, porém feito em Common Lisp.
 Usa SDL2 e OpenGL via Quicklisp.
 Otimizado para Emacs + SLIME.
 
+A fazer:
+- Corrigir bug de spawn da fruta
+- Adicionar menus
+- Adicionar tela de debriefing ao morrer
