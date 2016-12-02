@@ -7,6 +7,7 @@ CSonic/build/data/*
 CSonic/build/resources/*
 *.o
 *.exe
+*.dll
 */dsnakeb
 */dsnake
 
