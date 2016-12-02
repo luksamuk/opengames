@@ -3,6 +3,64 @@ opengames
 
 Pequenos jogos de exemplo com código aberto.
 
+cl-snake
+--------
+
+![cl-snake](screenshots/cl-snake.png)
+
+Mais um clone de Snake, porém feito em Common Lisp.
+
+Usa SDL2 e OpenGL via Quicklisp.
+Otimizado para Emacs + SLIME.
+
+A fazer:
+- Corrigir bug de spawn da fruta
+- Adicionar menus
+- Adicionar tela de debriefing ao morrer
+
+CGOL
+-----
+
+![CGOL](screenshots/cgol.png)
+
+Versão própria do Jogo da Vida de Conway.
+Escrito em C++, utiliza OpenGL/GLUT.
+
+Atualmente concluído:
+- Implementação da grade e das regras do jogo;
+- Implementação do redimensionamento da tela;
+- Atalhos de teclado;
+- Formas comuns para geração através de menu com clique direito;
+- Menu de clique direito, conciso e organizado;
+- Inserção e seleção de células com botões esquerdo e médio do mouse, respectivamente.
+
+A fazer:
+- Mais formas comuns, especialmente formas de crescimento indefinido;
+- Encontrar uma forma de sair do jogo de forma segura.
+
+cl-dagarden
+-----------
+
+![cl-dagarden](screenshots/cl-dagarden.png)
+
+Clone do modo D.A. Garden, do jogo Sonic CD.
+Ainda em fase de testes e incompleto.
+
+A fazer:
+- Sprites e objetos variados passando pela tela
+- Música de fundo
+- Menu com alguma coisa?
+
+NOTA: Também inclusa nesta pasta está uma versão 100% em Scheme (dagarden.scm),
+compatível com Chicken Scheme, porém inacabada; o suporte a texturas não
+parece funcionar bem nos bindings de OpenGL para Scheme.
+
+
+
+
+
+
+
 CBreakout
 ---------
 Clone de Breakout feito em OpenGL/GLUT.
@@ -59,26 +117,6 @@ A fazer:
 - Terminar funções de carregar/exportar paletas e fases;
 - Inserir personagens, inimigos, itens e etc que podem ser configurados através de script.
 
-CGOL
------
-
-![CGOL](screenshots/cgol.png)
-
-Versão própria do Jogo da Vida de Conway.
-Escrito em C++, utiliza OpenGL/GLUT.
-
-Atualmente concluído:
-- Implementação da grade e das regras do jogo;
-- Implementação do redimensionamento da tela;
-- Atalhos de teclado;
-- Formas comuns para geração através de menu com clique direito;
-- Menu de clique direito, conciso e organizado;
-- Inserção e seleção de células com botões esquerdo e médio do mouse, respectivamente.
-
-A fazer:
-- Mais formas comuns, especialmente formas de crescimento indefinido;
-- Encontrar uma forma de sair do jogo de forma segura.
-
 
 CHngmn
 ------
@@ -102,18 +140,3 @@ A fazer:
 - Mais detalhes a adicionar.
 
 
-
-cl-snake
---------
-
-![cl-snake](screenshots/cl-snake.png)
-
-Mais um clone de Snake, porém feito em Common Lisp.
-
-Usa SDL2 e OpenGL via Quicklisp.
-Otimizado para Emacs + SLIME.
-
-A fazer:
-- Corrigir bug de spawn da fruta
-- Adicionar menus
-- Adicionar tela de debriefing ao morrer
