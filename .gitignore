@@ -14,3 +14,6 @@ CSonic/build/resources/*
 *.fasl
 *~
 \#*\#
+
+*.bin
+*.dat

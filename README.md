@@ -38,12 +38,16 @@ A fazer:
 - Mais formas comuns, especialmente formas de crescimento indefinido;
 - Encontrar uma forma de sair do jogo de forma segura.
 
-cl-dagarden
+dagarden
 -----------
 
 ![cl-dagarden](screenshots/cl-dagarden.png)
 
-Clone do modo D.A. Garden, do jogo Sonic CD.
+Clone do modo D.A. Garden, do jogo Sonic CD, em C++ e Common Lisp,
+utilizando SDL2, SDL2\_Image e OpenGL.
+
+Versão em C++ usa também OficinaFramework 1.3, OpenAL, Ogg, Vorbis, Vorbisfile e PhysicsFS.
+
 Ainda em fase de testes e incompleto.
 
 A fazer:
@@ -117,14 +121,6 @@ A fazer:
 - Terminar funções de carregar/exportar paletas e fases;
 - Inserir personagens, inimigos, itens e etc que podem ser configurados através de script.
 
-
-CHngmn
-------
-
-Versão própria de um jogo de forca, escrito em C++.
-
-A fazer:
-- ...tudo.
 
 dsnakeb
 -------

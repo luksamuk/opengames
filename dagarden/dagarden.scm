@@ -25,8 +25,8 @@
 (define window #f)
 (define gl-context #f)
 (define running #t)
-(define viewport-width 800)
-(define viewport-height 600)
+(define viewport-width 960)
+(define viewport-height 540)
 
 
 ;; FPS-related
@@ -122,7 +122,7 @@
 		   pixelmode
 		   gl:UNSIGNED_BYTE
 		   (sdl2:surface-pixels-raw tex-surface))
-    ;;(gl:Finish)
+    (gl:Finish)
     (gl:Disable gl:TEXTURE_2D)
     (let ((myTexture (make-Texture
 		      ref: #f
@@ -140,9 +140,9 @@
 
 
 (define (load-content)
-  ;;(set! m-dagarden (load-music "./music/DAGardenBeta.mp3"))
+  ;;(set! m-dagarden (load-music "./assets/music/DAGardenBeta.ogg"))
   ;;(play-music m-dagarden)
-  (set! t-littleplanet (load-texture "./sprites/littleplanet.png")))
+  (set! t-littleplanet (load-texture "./assets/sprites/littleplanet.png")))
 
 
 (define (unload-content)
@@ -153,7 +153,7 @@
 ;;; Update func
 (define (update delta-t)
   ;; Square rotation
-  (set! rotation (+ rotation (* 30.0 delta-t)))
+  (set! rotation (- rotation (* 30.0 delta-t)))
   (if (>= rotation 360.0)
       (set! rotation (- rotation 360.0)))
 
@@ -226,7 +226,7 @@
     (sdl2:init! '(video joystick))
     (init-gl-attrs)
     ;; Create SDL2 window
-    (set! window (sdl2:create-window! "SDL2 Scheme"
+    (set! window (sdl2:create-window! "D.A. Garden (CHICKEN Scheme/SDL2/OpenGL)"
                                       'centered 'centered
                                       viewport-width viewport-height
                                       '(shown opengl)))

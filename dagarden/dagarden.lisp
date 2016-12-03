@@ -179,7 +179,7 @@
 
 (defmethod load-planet ((theplanet planet))
   (setf (tex theplanet)
-	(load-texture "./sprites/littleplanet.png")))
+	(load-texture "./assets/sprites/littleplanet.png")))
 
 (defmethod unload-planet ((theplanet planet))
   (gl:delete-textures (list (texture-name (tex theplanet)))))
@@ -265,7 +265,7 @@
 
   ;; Init planet
   (load-planet *littleplanet*)
-  (setf *t-background* (load-texture "./sprites/background.png"))
+  (setf *t-background* (load-texture "./assets/sprites/background.png"))
 
   
 
@@ -350,7 +350,7 @@
 (defun main-loop ()
   (sdl2:with-init (:video :joystick)
     (setf *window* (sdl2:create-window
-		    :title "D.A. Garden (Lisp/SDL2/GL)"
+		    :title "D.A. Garden (SBCL CommonLisp/SDL2/GL)"
 		    :x (- 1820 (round (* *window-width* 1)))
 		    :w *window-width* :h *window-height*
 		    :flags '(:shown :opengl)))
