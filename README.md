@@ -3,6 +3,19 @@ opengames
 
 Pequenos jogos de exemplo com código aberto.
 
+cl-2048
+-------
+
+![cl-2048](screenshots/cl-2048.png)
+
+Clone de 2048 em Common Lisp.
+
+Usa SDL2/OpenGL via Quicklisp.
+Otimizado para Emacs + SLIME com SBCL.
+
+A fazer:
+- Telas rápidas de Win/Lose com score
+
 cl-snake
 --------
 
@@ -11,7 +24,7 @@ cl-snake
 Mais um clone de Snake, porém feito em Common Lisp.
 
 Usa SDL2 e OpenGL via Quicklisp.
-Otimizado para Emacs + SLIME.
+Otimizado para Emacs + SLIME com SBCL.
 
 A fazer:
 - Corrigir bug de spawn da fruta
