@@ -31,6 +31,8 @@ A fazer:
 - Adicionar menus
 - Adicionar tela de debriefing ao morrer
 
+Para uma versão executável, veja [a página do jogo no itch.io](https://luksamuk.itch.io/cl-snake).
+
 CGOL
 -----
 
