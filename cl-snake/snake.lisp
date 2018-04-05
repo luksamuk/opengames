@@ -1,18 +1,37 @@
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (format t "Loading Quicklisp Libs~%")
-  (finish-output)
-  (ql:quickload "sdl2")
-  (ql:quickload "sdl2-image")
-  (ql:quickload "cl-opengl")
-  (ql:quickload "bordeaux-threads")
-  (format t "Loading symbols~%")
-  (finish-output)
-  (require 'sdl2)
-  (require 'cl-opengl)
-  (require 'bordeaux-threads))
+;;;; cl-snake
+;;;; A snake clone.
+;;;; Copyright © 2013-2018 Lucas Vieira
+;;;;
+;;;; Licensed under the MIT License.
+;;;; Permission is hereby granted, free of charge, to any person obtaining a copy of
+;;;; this software and associated documentation files (the "Software"), to deal in
+;;;; the Software without restriction, including without limitation the rights to
+;;;; use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+;;;; the Software, and to permit persons to whom the Software is furnished to do so,
+;;;; subject to the following conditions:
+;;;; 
+;;;; The above copyright notice and this permission notice shall be included in all
+;;;; copies or substantial portions of the Software.
+;;;; 
+;;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+;;;; FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+;;;; COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+;;;; IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+;;;; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.    
 
 
 
+;;; Uncomment the following and eval these lines to run it from
+;;; SBCL with Quicklisp. They remain commented for compilation
+;;; only
+;;(ql:quickload "sdl2")
+;;(ql:quickload "cl-opengl")
+;;(ql:quickload "bordeaux-threads")
+
+(require 'sdl2)
+(require 'cl-opengl)
+(require 'bordeaux-threads)
 
 ;; Hooks for thread-related stuff
 (defvar *next-frame-hook-mutex* (bt:make-lock "frame-hook-lock"))
@@ -281,8 +300,8 @@
 		  (is-overlapping-piece (pos thesnake) snake-piece))
 	     ;; TO-DO: Game Over
 	     (progn
-	       (format t "Snake collided with tail @ piece #~a~%" (- max-piece i))
-	       (format t "Final score: ~apts.~%" *player-score*)
+	       ;;(format t "Snake collided with tail @ piece #~a~%" (- max-piece i))
+	       ;;(format t "Final score: ~apts.~%" *player-score*)
 	       ;;(setf *running* nil)
 	       (init-snake thesnake)
 	       ))
@@ -440,7 +459,7 @@
 
 
 (defun init ()
-  (format t "===SNAKE GAME===~%")
+  ;;(format t "===SNAKE GAME===~%")
   (setf *frame-count* 0)
   (setf *last-fps-message-time* (sdl2:get-ticks))
   (setf *random-state* (make-random-state t))
@@ -469,10 +488,11 @@
 	  (seconds (/ (- (sdl2:get-ticks) *last-fps-message-time*) 1000.0)))
       (setf *fps*
 	    (if (zerop seconds) -1.0 (/ frames seconds)))
-      (format t "~s seconds: ~s fps, ~s ms/frame~%"
-	      seconds
-	      *fps*
-	      (if (zerop frames) "<infinite>" (* 1000 (/ seconds frames)))))
+      ;;(format t "~s seconds: ~s fps, ~s ms/frame~%"
+	  ;;    seconds
+	  ;;    *fps*
+	  ;;    (if (zerop frames) "<infinite>" (* 1000 (/ seconds frames))))
+      )
     (setf *last-fps-message-time* (sdl2:get-ticks))
     (setf *last-fps-message-frame-count* *frame-count*)))
 
@@ -483,9 +503,10 @@
   ;; Pause game
   (when (has-pressed :btn-start)
     (setf *running* (not *running*))
-    (if (not *running*)
-	(format t "Game Paused~%")
-	(format t "Continuing game~%")))
+    ;;(if (not *running*)
+	  ;;(format t "Game Paused~%")
+      ;;(format t "Continuing game~%"))
+    )
 
   ;; Quit game (Esc or Back)
   (when (has-pressed :btn-back)
@@ -515,7 +536,7 @@
   (sdl2:with-init (:video :joystick)
     (setf *window* (sdl2:create-window
 		    :title "Lisp Snake"
-		    :x (- 1820 (round (* *window-width* 1)))
+		    ;;:x (- 1820 (round (* *window-width* 1)))
 		    :w *window-width* :h *window-height*
 		    :flags '(:shown :opengl)))
     (setf *gl-context* (sdl2:gl-create-context *window*))
@@ -642,10 +663,10 @@
 			    (setf (input-values-back *input-state*) nil))))
 
 	
-	(:joyhatmotion (:which controller-id :hat hat :value value)
-		       (format t
-			       "Controller hat: Controller: ~a, Hat: ~a, Value: ~a~%"
-			       controller-id hat value))
+	;;(:joyhatmotion (:which controller-id :hat hat :value value)
+	;;	       (format t
+	;;		       "Controller hat: Controller: ~a, Hat: ~a, Value: ~a~%"
+	;;		       controller-id hat value))
 	
 	(:idle ()
 	       #+(and sbcl (not sb-thread))
@@ -668,4 +689,15 @@
       (sdl2:gl-delete-context *gl-context*)
       (sdl2:destroy-window *window*))))
 
-(main-loop)
+;;(main-loop)
+
+
+
+;; NOTE: This is a function that only serves the purpose of serving as
+;; entry-level for compilation tools, such as buildapp, which I used
+;; to compile this.
+;; For more info, visit https://www.xach.com/lisp/buildapp/
+(defun main-entry (argv)
+  "Defines a main entry for compiling from buildapp"
+  (declare (ignore argv))
+  (main-loop))
