@@ -690,14 +690,3 @@
       (sdl2:destroy-window *window*))))
 
 ;;(main-loop)
-
-
-
-;; NOTE: This is a function that only serves the purpose of serving as
-;; entry-level for compilation tools, such as buildapp, which I used
-;; to compile this.
-;; For more info, visit https://www.xach.com/lisp/buildapp/
-(defun main-entry (argv)
-  "Defines a main entry for compiling from buildapp"
-  (declare (ignore argv))
-  (main-loop))

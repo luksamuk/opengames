@@ -1,25 +1,12 @@
-SBCL=sbcl
-QUICKLISP=~/quicklisp/setup.lisp
-all: quicklisp-manifest.txt
-	buildapp --manifest-file quicklisp-manifest.txt \
-			--load snake.lisp \
-			--entry main-entry --output cl-snake
-	rm quicklisp-manifest.txt
+SBCL      = sbcl
+QUICKLISP = ~/quicklisp/setup.lisp
 
-quicklisp-manifest.txt:
-	$(SBCL) --no-userinit --no-sysinit --non-interactive \
-				--load $(QUICKLISP) \
-				--eval '(ql:quickload "sdl2")' \
-				--eval '(ql:quickload "cl-opengl")' \
-				--eval '(ql:quickload "bordeaux-threads")' \
-				--eval '(ql:write-asdf-manifest-file "quicklisp-manifest.txt")'
+all:
+	$(SBCL) --no-userinit --no-sysinit --non-interactive  \
+			--load $(QUICKLISP) \
+			--load build.lisp
 
-# Well this one ain't really working :/
-win32:
-	sbcl-win32 --no-userinit --no-sysinit --non-interactive \
-				--load 'C:/users/alchemist/.sbclrc' \
-				--load snake.lisp \
-				--eval '(ql:quickload \"sdl2\")' \
-				--eval '(ql:quickload \"cl-opengl\")' \
-				--eval '(ql:quickload \"bordeaux-threads\")' \
-				--eval '(sb-ext:save-lisp-and-die \"cl-snake.exe\" :toplevel #\'main-loop :executable t)'
+# Compiling for Windows (32-bit)
+win32: SBCL      := sbcl-win32
+win32: QUICKLISP := C:/users/alchemist/quicklisp/setup.lisp
+win32: all

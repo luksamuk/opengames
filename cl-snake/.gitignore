@@ -1,2 +1,2 @@
-quicklisp-manifest.txt
-cl-snake
+cl-snake.*
+SDL2.dll
